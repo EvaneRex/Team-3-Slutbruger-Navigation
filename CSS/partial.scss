@@ -15,7 +15,23 @@ $blaa60: rgba(12, 39, 82, 0.6);
 $blaa30: rgba(12, 39, 82, 0.3);
 $lyseblaa60: rgba(86, 156, 217, 0.6);
 $lyseblaa30: rgba(86, 156, 217, 0.3);
+$txt-dark: #080808;
+$txt-light: #f5f3f3;
+$font: Verdana, Geneva, Tahoma, sans-serif;
 
+// Overskrifter
 @mixin h1 {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-family: $font;
+  color: $txt-dark;
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 54px;
+}
+
+@mixin h2 {
+  font-family: $font;
+  color: $txt-dark;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 27px;
 }
