@@ -26,12 +26,38 @@ $font: Verdana, Geneva, Tahoma, sans-serif;
   font-size: 46px;
   font-weight: 700;
   line-height: 54px;
+  letter-spacing: -2px;
 }
 
 @mixin h2 {
   font-family: $font;
   color: $txt-dark;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 27px;
+  letter-spacing: -1.2px;
+}
+
+@mixin txt($txtcolor: $txt-dark) {
+  font-family: $font;
+  color: $txtcolor;
   font-weight: 400;
   font-size: 17px;
   line-height: 27px;
+  letter-spacing: -0.5px;
+}
+
+@mixin btn {
+  font-family: $font;
+  color: $txt-light;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 27px;
+  background-color: $HJV;
+  padding: 12px;
+
+  &:hover {
+    background-color: $txt-light;
+    color: $txt-dark;
+  }
 }
