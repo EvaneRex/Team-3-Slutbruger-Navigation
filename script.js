@@ -46,3 +46,5 @@ class User {
 document.addEventListener("DOMContentLoaded", () => {
   new User("login", "username");
 });
+
+
