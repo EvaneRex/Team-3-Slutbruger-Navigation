@@ -17,12 +17,43 @@ body {
   .header {
     background-color: partial.$txt-light;
     width: 100%;
-    height: 10vh;
+    height: auto;
 
     div {
       background-color: partial.$HJV;
       width: 100%;
-      height: 20px;
+      height: auto;
+      display: flex;
+      justify-content: flex-end;
+        p{
+          color: partial.$txt-light;
+          padding: 5px 15px;
+        }
+      
+    }
+
+    .logoMobile, .logoDesk {
+      padding: 15px;
+    }
+
+    .logoMobile{
+      width: 68px;
+      height: auto;
+    }
+
+    .logoDesk {
+      display: none;
+    }
+
+    @media (min-width:768px) {
+      .logoMobile {
+        display: none;
+      }
+
+      .logoDesk {
+        display: block;
+      }
+      
     }
   }
 

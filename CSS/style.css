@@ -14,12 +14,36 @@ body .main {
 body .header {
   background-color: #fdfdfd;
   width: 100%;
-  height: 10vh;
+  height: auto;
 }
 body .header div {
   background-color: #802438;
   width: 100%;
-  height: 20px;
+  height: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+body .header div p {
+  color: #fdfdfd;
+  padding: 5px 15px;
+}
+body .header .logoMobile, body .header .logoDesk {
+  padding: 15px;
+}
+body .header .logoMobile {
+  width: 68px;
+  height: auto;
+}
+body .header .logoDesk {
+  display: none;
+}
+@media (min-width: 768px) {
+  body .header .logoMobile {
+    display: none;
+  }
+  body .header .logoDesk {
+    display: block;
+  }
 }
 body #sidebar {
   height: 100%;
