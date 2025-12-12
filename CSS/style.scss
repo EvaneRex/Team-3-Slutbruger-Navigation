@@ -14,7 +14,7 @@ body {
     display: flex;
   }
 
-  .header {
+  header {
     background-color: partial.$txt-light;
     width: 100%;
     height: auto;
@@ -25,18 +25,18 @@ body {
       height: auto;
       display: flex;
       justify-content: flex-end;
-        p{
-          color: partial.$txt-light;
-          padding: 5px 15px;
-        }
-      
+      p {
+        color: partial.$txt-light;
+        padding: 5px 15px;
+      }
     }
 
-    .logoMobile, .logoDesk {
+    .logoMobile,
+    .logoDesk {
       padding: 15px;
     }
 
-    .logoMobile{
+    .logoMobile {
       width: 68px;
       height: auto;
     }
@@ -45,7 +45,7 @@ body {
       display: none;
     }
 
-    @media (min-width:768px) {
+    @media (min-width: 768px) {
       .logoMobile {
         display: none;
       }
@@ -53,7 +53,6 @@ body {
       .logoDesk {
         display: block;
       }
-      
     }
   }
 
@@ -70,30 +69,29 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-
-    #login {
-      display: flex;
-      flex-direction: column;
+  }
+  #login {
+    display: flex;
+    flex-direction: column;
+    @include partial.txt;
+    background-color: partial.$HJV;
+    width: 70%;
+    height: auto;
+    color: partial.$txt-light;
+    padding: 2rem 2rem;
+    input {
+      margin-bottom: 1.5rem;
       @include partial.txt;
-      background-color: partial.$HJV;
-      width: 70%;
-      height: auto;
-      color: partial.$txt-light;
-      padding: 2rem 2rem;
-      input {
-        margin-bottom: 1.5rem;
-        @include partial.txt;
-      }
-      button {
-        margin-top: 1rem;
-        padding: 12px;
-        @include partial.btn(
-          $hoverBgColor: partial.$HJV,
-          $hoverTxtColor: partial.$txt-light
-        );
-        background-color: partial.$txt-light;
-        color: partial.$txt-dark;
-      }
+    }
+    button {
+      margin-top: 1rem;
+      padding: 12px;
+      @include partial.btn(
+        $hoverBgColor: partial.$HJV,
+        $hoverTxtColor: partial.$txt-light
+      );
+      background-color: partial.$txt-light;
+      color: partial.$txt-dark;
     }
   }
 }

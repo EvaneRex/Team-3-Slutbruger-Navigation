@@ -11,37 +11,38 @@ body .main {
   background-color: #fdfdfd;
   display: flex;
 }
-body .header {
+body header {
   background-color: #fdfdfd;
   width: 100%;
   height: auto;
 }
-body .header div {
+body header div {
   background-color: #8d1b3d;
   width: 100%;
   height: auto;
   display: flex;
   justify-content: flex-end;
 }
-body .header div p {
+body header div p {
   color: #fdfdfd;
   padding: 5px 15px;
 }
-body .header .logoMobile, body .header .logoDesk {
+body header .logoMobile,
+body header .logoDesk {
   padding: 15px;
 }
-body .header .logoMobile {
+body header .logoMobile {
   width: 68px;
   height: auto;
 }
-body .header .logoDesk {
+body header .logoDesk {
   display: none;
 }
 @media (min-width: 768px) {
-  body .header .logoMobile {
+  body header .logoMobile {
     display: none;
   }
-  body .header .logoDesk {
+  body header .logoDesk {
     display: block;
   }
 }
@@ -58,7 +59,7 @@ body #map {
   justify-content: center;
   align-items: center;
 }
-body #map #login {
+body #login {
   display: flex;
   flex-direction: column;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -73,7 +74,7 @@ body #map #login {
   color: #fdfdfd;
   padding: 2rem 2rem;
 }
-body #map #login input {
+body #login input {
   margin-bottom: 1.5rem;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: #080808;
@@ -82,7 +83,7 @@ body #map #login input {
   line-height: 27px;
   letter-spacing: -0.5px;
 }
-body #map #login button {
+body #login button {
   margin-top: 1rem;
   padding: 12px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -96,7 +97,7 @@ body #map #login button {
   background-color: #fdfdfd;
   color: #080808;
 }
-body #map #login button:hover {
+body #login button:hover {
   background-color: #8d1b3d;
   color: #fdfdfd;
   border: 2px solid white;
