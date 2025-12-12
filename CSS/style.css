@@ -52,14 +52,14 @@ body #sidebar {
   background-color: #fdfdfd;
   box-shadow: 0px 4px 4px rgba(63, 91, 88, 0.1) inset;
 }
-body #map {
+body #content {
   width: 70vw;
   height: 90vh;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-body #login {
+body #content #login {
   display: flex;
   flex-direction: column;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -74,7 +74,7 @@ body #login {
   color: #fdfdfd;
   padding: 2rem 2rem;
 }
-body #login input {
+body #content #login input {
   margin-bottom: 1.5rem;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: #080808;
@@ -83,7 +83,7 @@ body #login input {
   line-height: 27px;
   letter-spacing: -0.5px;
 }
-body #login button {
+body #content #login button {
   margin-top: 1rem;
   padding: 12px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -97,7 +97,7 @@ body #login button {
   background-color: #fdfdfd;
   color: #080808;
 }
-body #login button:hover {
+body #content #login button:hover {
   background-color: #8d1b3d;
   color: #fdfdfd;
   border: 2px solid white;

@@ -63,35 +63,35 @@ body {
     box-shadow: 0px 4px 4px partial.$FMN inset;
   }
 
-  #map {
+  #content {
     width: 70vw;
     height: 90vh;
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  #login {
-    display: flex;
-    flex-direction: column;
-    @include partial.txt;
-    background-color: partial.$HJV;
-    width: 70%;
-    height: auto;
-    color: partial.$txt-light;
-    padding: 2rem 2rem;
-    input {
-      margin-bottom: 1.5rem;
+    #login {
+      display: flex;
+      flex-direction: column;
       @include partial.txt;
-    }
-    button {
-      margin-top: 1rem;
-      padding: 12px;
-      @include partial.btn(
-        $hoverBgColor: partial.$HJV,
-        $hoverTxtColor: partial.$txt-light
-      );
-      background-color: partial.$txt-light;
-      color: partial.$txt-dark;
+      background-color: partial.$HJV;
+      width: 70%;
+      height: auto;
+      color: partial.$txt-light;
+      padding: 2rem 2rem;
+      input {
+        margin-bottom: 1.5rem;
+        @include partial.txt;
+      }
+      button {
+        margin-top: 1rem;
+        padding: 12px;
+        @include partial.btn(
+          $hoverBgColor: partial.$HJV,
+          $hoverTxtColor: partial.$txt-light
+        );
+        background-color: partial.$txt-light;
+        color: partial.$txt-dark;
+      }
     }
   }
 }
