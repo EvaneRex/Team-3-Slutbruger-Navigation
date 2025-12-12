@@ -24,6 +24,14 @@ body {
         color: partial.$txt-light;
         padding: 5px 15px;
       }
+      #logout {
+        display: none;
+        a {
+          @include partial.txt;
+          color: partial.$txt-light;
+          text-decoration: underline;
+        }
+      }
     }
     a {
       display: flex;
