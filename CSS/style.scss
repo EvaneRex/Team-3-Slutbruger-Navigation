@@ -144,6 +144,14 @@ body {
       #content {
         position: relative;
         height: 100%;
+        #login {
+          width: 60%;
+          padding: 5rem 5rem;
+          button {
+            width: 60%;
+            align-self: center;
+          }
+        }
       }
       #sidebar {
         height: 100%;

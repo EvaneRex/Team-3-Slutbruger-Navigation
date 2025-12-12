@@ -138,6 +138,14 @@ body .main #content #login button:hover {
     position: relative;
     height: 100%;
   }
+  body .main #content #login {
+    width: 60%;
+    padding: 5rem 5rem;
+  }
+  body .main #content #login button {
+    width: 60%;
+    align-self: center;
+  }
   body .main #sidebar {
     height: 100%;
     width: 30vw;
