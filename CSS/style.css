@@ -26,4 +26,54 @@ body #sidebar {
   width: 30vw;
   background-color: #fdfdfd;
   box-shadow: 0px 4px 4px rgba(69, 91, 89, 0.1) inset;
+}
+body #maps {
+  width: 70vw;
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body #maps #login {
+  display: flex;
+  flex-direction: column;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: #080808;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 27px;
+  letter-spacing: -0.5px;
+  background-color: #802438;
+  width: 70%;
+  height: auto;
+  color: #fdfdfd;
+  padding: 2rem 2rem;
+}
+body #maps #login input {
+  margin-bottom: 1.5rem;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: #080808;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 27px;
+  letter-spacing: -0.5px;
+}
+body #maps #login button {
+  margin-top: 1rem;
+  padding: 12px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: #fdfdfd;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 27px;
+  letter-spacing: -0.5px;
+  background-color: #802438;
+  padding: 12px;
+  background-color: #fdfdfd;
+  color: #080808;
+}
+body #maps #login button:hover {
+  background-color: #802438;
+  color: #fdfdfd;
+  border: 2px solid white;
 }/*# sourceMappingURL=style.css.map */

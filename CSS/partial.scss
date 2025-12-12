@@ -47,17 +47,24 @@ $font: Verdana, Geneva, Tahoma, sans-serif;
   letter-spacing: -0.5px;
 }
 
-@mixin btn {
+@mixin btn(
+  $btnTxtColor: $txt-light,
+  $bgColor: $HJV,
+  $hoverBgColor: $txt-light,
+  $hoverTxtColor: $txt-dark
+) {
   font-family: $font;
-  color: $txt-light;
+  color: $btnTxtColor;
   font-weight: 400;
   font-size: 17px;
   line-height: 27px;
+  letter-spacing: -0.5px;
   background-color: $HJV;
   padding: 12px;
 
   &:hover {
-    background-color: $txt-light;
-    color: $txt-dark;
+    background-color: $hoverBgColor;
+    color: $hoverTxtColor;
+    border: 2px solid white;
   }
 }
