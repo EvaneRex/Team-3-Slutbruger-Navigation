@@ -53,6 +53,10 @@ body #content {
   justify-content: center;
   align-items: center;
 }
+body #content #map {
+  width: 100%;
+  width: 70vh;
+}
 body #content #login {
   display: flex;
   flex-direction: column;

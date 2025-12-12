@@ -60,6 +60,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    #map{
+      width: 100%;
+      width: 70vh;
+    }
     #login {
       display: flex;
       flex-direction: column;
