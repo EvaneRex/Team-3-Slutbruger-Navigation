@@ -5,8 +5,10 @@ class User {
   constructor(loginFormId, headerUsernameId) {
     this.loginForm = document.getElementById(loginFormId);
     this.headerUsername = document.getElementById(headerUsernameId);
+    this.logoutBtn = document.getElementById("logout");
     this.checkLocalStorage();
     this.initLogin();
+    this.initLogout();
   }
 
   initLogin() {
@@ -16,12 +18,13 @@ class User {
       const username = document.getElementById("usernameLogin").value;
       const password = document.getElementById("password").value;
 
-      // Fake brugernavn
       if (username === "Gruppe6" && password === "Eksamen") {
         this.#username = username;
         this.updateHeader();
         this.hideLogin();
         localStorage.setItem("username", username);
+
+        this.logoutBtn.style.display = "inline";
       } else {
         alert("Forkert brugernavn eller adgangskode");
       }
@@ -34,8 +37,11 @@ class User {
       this.#username = storedUser;
       this.updateHeader();
       this.hideLogin();
+
+      this.logoutBtn.style.display = "inline";
     }
   }
+
   // Smider brugernavnet op i headeren
   updateHeader() {
     this.headerUsername.textContent = this.#username;
@@ -47,6 +53,26 @@ class User {
     // lægger et overlay på kortet
     const maps = document.getElementById("map");
     maps.classList.remove("blur");
+  }
+
+  initLogout() {
+    if (!this.logoutBtn) return;
+    this.logoutBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      this.logout();
+    });
+  }
+
+  logout() {
+    localStorage.removeItem("username");
+    this.#username = "";
+    this.headerUsername.textContent = "";
+    this.loginForm.style.display = "flex";
+
+    const maps = document.getElementById("map");
+    maps.classList.add("blur");
+
+    this.logoutBtn.style.display = "none";
   }
 
   getUsername() {

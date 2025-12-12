@@ -21,8 +21,15 @@ body {
       justify-content: flex-end;
       align-items: center;
       p {
+        @include partial.txt;
         color: partial.$txt-light;
         padding: 5px 15px;
+      }
+      #logout {
+        display: none;
+        @include partial.txt;
+        color: partial.$txt-light;
+        text-decoration: underline;
       }
     }
     a {
