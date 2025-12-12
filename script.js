@@ -57,3 +57,34 @@ class User {
 document.addEventListener("DOMContentLoaded", () => {
   new User("login", "username");
 });
+
+   // Globals
+   let map;
+    let playerMarker;
+
+    function initMap() {
+      // Default startcenter (kan senere sættes dynamisk)
+      const defaultCenter = { lat: 55.45, lng: 12.10 };
+
+      // Initialiser kortet med Map ID
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: defaultCenter,
+        zoom: 15,
+      });
+
+      // Opret marker for spilleren (mus)
+      playerMarker = new google.maps.Marker({
+        position: defaultCenter,
+        map: map,
+        label: "🧍",
+        title: "Spiller",
+        visible: false
+      });
+
+      // Flyt spiller med musen
+      map.addListener('mousemove', (e) => {
+        const pos = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+        playerMarker.setPosition(pos);
+        playerMarker.setVisible(true);
+      });
+    }
