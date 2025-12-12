@@ -5,6 +5,7 @@ class User {
   constructor(loginFormId, headerUsernameId) {
     this.loginForm = document.getElementById(loginFormId);
     this.headerUsername = document.getElementById(headerUsernameId);
+    this.checkLocalStorage();
     this.initLogin();
   }
 
@@ -20,10 +21,20 @@ class User {
         this.#username = username;
         this.updateHeader();
         this.hideLogin();
+        localStorage.setItem("username", username);
       } else {
         alert("Forkert brugernavn eller adgangskode");
       }
     });
+  }
+
+  checkLocalStorage() {
+    const storedUser = localStorage.getItem("username");
+    if (storedUser) {
+      this.#username = storedUser;
+      this.updateHeader();
+      this.hideLogin();
+    }
   }
   // Smider brugernavnet op i headeren
   updateHeader() {
@@ -46,5 +57,3 @@ class User {
 document.addEventListener("DOMContentLoaded", () => {
   new User("login", "username");
 });
-
-
