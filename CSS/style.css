@@ -21,13 +21,17 @@ body header div {
   align-items: center;
 }
 body header div p {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: #080808;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 27px;
+  letter-spacing: -0.5px;
   color: #fdfdfd;
   padding: 5px 15px;
 }
 body header div #logout {
   display: none;
-}
-body header div #logout a {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: #080808;
   font-weight: 400;
