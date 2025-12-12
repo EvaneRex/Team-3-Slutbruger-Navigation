@@ -22,36 +22,27 @@ body {
     div {
       background-color: partial.$HJV;
       width: 100%;
-      height: auto;
+      height: 3vh;
       display: flex;
       justify-content: flex-end;
+      align-items: center;
       p {
         color: partial.$txt-light;
         padding: 5px 15px;
       }
     }
+    a {
+      display: flex;
+      align-items: center;
 
-    .logoMobile,
-    .logoDesk {
-      padding: 15px;
-    }
-
-    .logoMobile {
-      width: 68px;
-      height: auto;
-    }
-
-    .logoDesk {
-      display: none;
-    }
-
-    @media (min-width: 768px) {
       .logoMobile {
-        display: none;
+        width: 68px;
+        height: auto;
+        padding: 15px;
       }
 
       .logoDesk {
-        display: block;
+        display: none;
       }
     }
   }
@@ -91,6 +82,39 @@ body {
         );
         background-color: partial.$txt-light;
         color: partial.$txt-dark;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 425px) and (max-width: 800px) {
+  body {
+    header {
+      a {
+        .logoMobile {
+          display: none;
+        }
+
+        .logoDesk {
+          display: block;
+          padding: 10px 20px 20px;
+        }
+      }
+    }
+  }
+}
+@media only screen and (min-width: 801px) {
+  body {
+    header {
+      a {
+        .logoMobile {
+          display: none;
+        }
+
+        .logoDesk {
+          display: block;
+          padding: 10px 20px 20px;
+        }
       }
     }
   }

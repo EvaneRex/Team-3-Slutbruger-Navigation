@@ -19,32 +19,26 @@ body header {
 body header div {
   background-color: #8d1b3d;
   width: 100%;
-  height: auto;
+  height: 3vh;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
 }
 body header div p {
   color: #fdfdfd;
   padding: 5px 15px;
 }
-body header .logoMobile,
-body header .logoDesk {
-  padding: 15px;
+body header a {
+  display: flex;
+  align-items: center;
 }
-body header .logoMobile {
+body header a .logoMobile {
   width: 68px;
   height: auto;
+  padding: 15px;
 }
-body header .logoDesk {
+body header a .logoDesk {
   display: none;
-}
-@media (min-width: 768px) {
-  body header .logoMobile {
-    display: none;
-  }
-  body header .logoDesk {
-    display: block;
-  }
 }
 body #sidebar {
   height: 100%;
@@ -101,4 +95,23 @@ body #content #login button:hover {
   background-color: #8d1b3d;
   color: #fdfdfd;
   border: 2px solid white;
+}
+
+@media screen and (min-width: 425px) and (max-width: 800px) {
+  body header a .logoMobile {
+    display: none;
+  }
+  body header a .logoDesk {
+    display: block;
+    padding: 10px 20px 20px;
+  }
+}
+@media only screen and (min-width: 801px) {
+  body header a .logoMobile {
+    display: none;
+  }
+  body header a .logoDesk {
+    display: block;
+    padding: 10px 20px 20px;
+  }
 }/*# sourceMappingURL=style.css.map */
