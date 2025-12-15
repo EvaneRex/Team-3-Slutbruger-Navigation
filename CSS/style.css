@@ -15,7 +15,7 @@ body header {
 body header div {
   background-color: #8d1b3d;
   width: 100%;
-  height: 3vh;
+  height: 3.5vh;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -40,6 +40,7 @@ body header div #logout {
   letter-spacing: -0.5px;
   color: #fdfdfd;
   text-decoration: underline;
+  margin-right: 10px;
 }
 body header a {
   display: flex;
@@ -63,9 +64,26 @@ body .main #sidebar {
   width: 100%;
   background-color: #fdfdfd;
   box-shadow: 0px 4px 4px rgba(63, 91, 88, 0.1) inset;
+  padding: 1.2rem 1.2rem;
+}
+body .main #sidebar #headingOne {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: #080808;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 27px;
+  letter-spacing: -1.2px;
+}
+body .main #sidebar #introTxt {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: #080808;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 27px;
+  letter-spacing: -0.5px;
 }
 body .main #content {
-  width: 70vw;
+  width: auto;
   height: 60vh;
   display: flex;
   justify-content: center;
@@ -152,10 +170,11 @@ body .main #content #login button:hover {
   }
   body .main {
     flex-direction: row;
-    height: 85vh;
+    height: 86vh;
   }
   body .main #content {
     position: relative;
+    width: 70vw;
     height: 100%;
   }
   body .main #content #login {
