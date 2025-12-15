@@ -113,13 +113,6 @@ function initMap() {
     playerMarker.setPosition(pos);
     playerMarker.setVisible(true);
   });
-
-  // Flyt spiller med musen
-  map.addListener("mousemove", (e) => {
-    const pos = { lat: e.latLng.lat(), lng: e.latLng.lng() };
-    playerMarker.setPosition(pos);
-    playerMarker.setVisible(true);
-  });
 }
 
 // Henter API
