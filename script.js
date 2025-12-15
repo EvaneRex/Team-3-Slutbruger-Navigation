@@ -93,6 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
 let map;
 let playerMarker;
 
+
 // Init map
 async function initMap() {
   const defaultCenter = { lat: 55.45, lng: 12.10 };
