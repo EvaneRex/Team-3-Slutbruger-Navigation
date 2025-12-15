@@ -3,6 +3,7 @@ let map;
 let playerMarker;
 let mouseMoveListener;
 
+// Indsætter kortet, og centrere det på dk, tilføjer playerMarker
 function initMap() {
   const defaultCenter = { lat: 55.45, lng: 12.1 };
 
@@ -20,6 +21,7 @@ function initMap() {
   });
 }
 
+// Håndtering af playerMarker aktiveret/deaktiveret
 function activatePlayerMarker() {
   if (mouseMoveListener) return;
 
@@ -45,6 +47,7 @@ function deactivatePlayerMarker() {
 }
 
 // Opdater User-klassen
+// skal connectes med sidebaren, så den skifter når man er logget ind
 class User {
   #username = "";
 
@@ -122,6 +125,7 @@ class User {
   }
 }
 
+// Henter scenarier fra gruppe 3 og opsætter dem i deres boks
 async function loadScenarios() {
   try {
     const response = await fetch(
@@ -141,6 +145,7 @@ async function loadScenarios() {
     const sidebar = document.getElementById("sidebar");
     sidebar.innerHTML = "";
 
+    // Bygger kassen i sidebaren
     scenarios.forEach((scenario) => {
       const scenarioBox = document.createElement("div");
       scenarioBox.classList.add("opgaveBox");
@@ -153,6 +158,7 @@ async function loadScenarios() {
       desc.textContent = scenario.description;
       scenarioBox.appendChild(desc);
 
+      // Checkbokse til svarmulighederne
       const fieldset = document.createElement("fieldset");
 
       scenario.tasks.forEach((task) => {
@@ -177,6 +183,37 @@ async function loadScenarios() {
       });
 
       const btn = getElementById("scenarioBtn");
+      btn.textContent = "Næste";
+      btn.disabled = true;
+      scenario.appendChild(btn);
+
+      let currentTaskIndex = 0;
+
+      const taskMarkers = [];
+      const taskAreas = [];
+
+      scenario.tasks.forEach((task) => {
+        const marker = new google.maps.Marker({
+          position: { lat: task.geo.at, lng: task.geo.lng },
+          map: map,
+        });
+        taskMarkers.push(marker);
+
+        const areas = new google.maps.Circle({
+          strokecolor: FF0004,
+          strokeWeight: 5,
+          fillColor: FF0004,
+          fillOpacity: 0.3,
+        });
+        taskAreas.push(areas);
+
+        if (currentTaskIndex >= scenario.tasks.length) return;
+
+        const distance = google.maps.geometry.spherical.computeDistanceBetween(
+          new google.maps.LatLng(pos.lat, pos.lng),
+          new google.maps.LatLng(task.geo.lat, task.geo.lng)
+        );
+      });
 
       scenarioBox.appendChild(fieldset);
       sidebar.appendChild(scenarioBox);
@@ -186,6 +223,7 @@ async function loadScenarios() {
   }
 }
 
+// Opstarter kortet og login
 document.addEventListener("DOMContentLoaded", () => {
   initMap();
   new User("login", "username");
