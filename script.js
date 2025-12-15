@@ -71,6 +71,7 @@ class User {
         this.#username = username;
         this.updateHeader();
         this.hideLogin();
+        introTxtScreen("loggedIn", this.username);
         localStorage.setItem("username", username);
 
         this.logoutBtn.style.display = "inline";
@@ -111,6 +112,8 @@ class User {
 
   logout() {
     localStorage.removeItem("username");
+    introTxtScreen("loggedOut");
+
     this.#username = "";
     this.headerUsername.textContent = "";
     this.loginForm.style.display = "flex";
@@ -122,6 +125,24 @@ class User {
 
   getUsername() {
     return this.#username;
+  }
+}
+
+//
+const headingOne = document.getElementById("headingOne");
+const introTxt = document.getElementById("introTxt");
+function introTxtScreen(state) {
+  if (state === "loggedOut") {
+    headingOne.textContent = "Velkommen";
+    introTxt.innerHTML = `Dette er Hjemmeværnsskolens øvelsesplatform.<br>Når du er logget ind, vil opgaver automatisk blive aktiveret, når du nærmer dig den tildelte øvelseszone.`;
+  }
+  if (state === "loggedIn") {
+    headingOne.textContent = "Udforsk";
+    introTxt.innerHTML = `Udforsk kortet for at lokalisere yderligere opgaver i dit område.<br>Hvis der ikke fremgår aktive opgaver, returnér da til base.`;
+  }
+  if (state === "task.isActive") {
+    headingOne.textContent = "Scenarie";
+    introTxt.style.display = "none";
   }
 }
 
@@ -160,11 +181,10 @@ async function loadScenarios() {
 
       // Checkbokse til svarmulighederne
       const fieldset = document.createElement("fieldset");
-      scenarioBox.appendChild(desc);
+      scenarioBox.appendChild(fieldset);
 
+      //------ Lokationsmarker, opgaveområde og aktivering af området
       let currentTaskIndex = 0;
-
-      // Lokationsmarker, opgaveområde og aktivering af området
       const taskMarkers = [];
       const taskAreas = [];
 
@@ -193,11 +213,13 @@ async function loadScenarios() {
         });
       });
 
+      // Knappen der fører mellem opgaverne i scenariet
       const btn = document.getElementById("scenarioBtn");
       btn.textContent = "Næste";
       btn.disabled = true;
       scenarioBox.appendChild(btn);
 
+      // Markøren for opgaverne
       scenario.tasks.forEach((task) => {
         const marker = new google.maps.Marker({
           position: { lat: task.geo.lat, lng: task.geo.lng },
@@ -205,9 +227,10 @@ async function loadScenarios() {
         });
         taskMarkers.push(marker);
 
+        // Markeringen af ikke aktive områder (af opgaverne)
         const areas = new google.maps.Circle({
           map: map,
-          strokecolor: "#FF0004",
+          strokeColor: "#FF0004",
           strokeWeight: 5,
           fillColor: "#FF0004",
           fillOpacity: 0.3,
@@ -220,44 +243,54 @@ async function loadScenarios() {
 
         if (currentTaskIndex >= scenario.tasks.length) return;
 
-        const distance = google.maps.geometry.spherical.computeDistanceBetween(
-          new google.maps.LatLng(pos.lat, pos.lng), //pos er ikke defineret
-          new google.maps.LatLng(task.geo.lat, task.geo.lng)
-        );
+        // Mousemove så opgaven visuelt markeret aktiv når brugerne kører musen over
+        map.addListener("mousemove", (e) => {
+          const pos = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+          const distance =
+            google.maps.geometry.spherical.computeDistanceBetween(
+              new google.maps.LatLng(pos.lat, pos.lng),
+              new google.maps.LatLng(task.geo.lat, task.geo.lng)
+            );
+          introTxtScreen("taskActive");
 
-        // hvis distancen på musen er mindre end radiussen på opgaven, så vises scenarieboksen
-        if (distance < task.geo.radius) {
-          task.element.style.display = "block"; // vi har ikke sat nogen tast element
-        } else {
-          task.element.style.display = "none";
-        }
+          // hvis distancen på musen er mindre end radiussen på opgaven, så vises scenarieboksen
+          if (distance < task.geo.radius) {
+            task.isActive = true;
+            task.element.style.display = "block";
+            btn.disabled = false;
 
-        areas.addEventListener("click", (e) => {
-          task.isActive = true;
-          areas.setOptions({
-            fillColor: "#597E50",
-            strokeColor: "#597E50",
-          });
-        });
-
-        // Mousemove
-        areas.addEventListener("mousemove", (e) => {
-          if (task.isActive === true) {
             areas.setOptions({
               fillColor: "#597E50",
               strokeColor: "#597E50",
             });
           } else {
-            areas.setOptions({
-              fillColor: "#FF0004",
-              strokeColor: "#FF0004",
-            });
+            task.isActive = false;
+
+            if (!task.isLocked) {
+              task.element.style.display = "none";
+              areas.setOptions({
+                fillColor: "#FF0004",
+                strokeColor: "#FF0004",
+              });
+            }
           }
         });
 
-        scenarioBox.appendChild(fieldset);
-        sidebar.appendChild(scenarioBox);
+        // gør opgaven aktiv når brugeren klikker på den
+        areas.addListener("click", () => {
+          task.isActive = true;
+          task.isLocked = true;
+          introTxtScreen("taskActive");
+          areas.setOptions({
+            fillColor: "#597E50",
+            strokeColor: "#597E50",
+          });
+
+          currentTaskIndex++;
+        });
       });
+      scenarioBox.appendChild(fieldset);
+      sidebar.appendChild(scenarioBox);
     });
   } catch (error) {
     console.error(error);
@@ -268,15 +301,5 @@ async function loadScenarios() {
 document.addEventListener("DOMContentLoaded", () => {
   initMap();
   new User("login", "username");
+  introTxtScreen("loggedOut");
 });
-
-// Henter API
-async function getTasks() {
-  const response = await fetch("./data/tasks.json");
-
-  if (!response.ok) {
-    throw new Error("Kunne ikke hente tasks.json");
-  }
-
-  return response.json();
-}
