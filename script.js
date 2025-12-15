@@ -122,6 +122,70 @@ class User {
   }
 }
 
+async function loadScenarios() {
+  try {
+    const response = await fetch(
+      "https://api.jsonbin.io/v3/b/6939291ad0ea881f401efd5e",
+      {
+        headers: {
+          "x-access-key":
+            "$2a$10$rbxsXvTusL7oeoOTyUmf2.B7q7wRIbEty5zzAsWpoJMElkv1REKNS",
+        },
+      }
+    );
+
+    if (!response.ok) throw new Error("Kunne ikke hente API-data");
+
+    const data = await response.json();
+    const scenarios = data.record.scenarios;
+    const sidebar = document.getElementById("sidebar");
+    sidebar.innerHTML = "";
+
+    scenarios.forEach((scenario) => {
+      const scenarioBox = document.createElement("div");
+      scenarioBox.classList.add("opgaveBox");
+
+      const title = document.createElement("h2");
+      title.textContent = scenario.title;
+      scenarioBox.appendChild(title);
+
+      const desc = document.createElement("p");
+      desc.textContent = scenario.description;
+      scenarioBox.appendChild(desc);
+
+      const fieldset = document.createElement("fieldset");
+
+      scenario.tasks.forEach((task) => {
+        const div = document.createElement("div");
+
+        task.options.forEach((opt, i) => {
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.id = `${task.taskId}-option-${i}`;
+          checkbox.name = `task-${task.taskId}`;
+          checkbox.value = opt;
+
+          const label = document.createElement("label");
+          label.setAttribute("for", checkbox.id);
+          label.textContent = opt;
+
+          div.appendChild(checkbox);
+          div.appendChild(label);
+        });
+
+        fieldset.appendChild(div);
+      });
+
+      const btn = getElementById("scenarioBtn");
+
+      scenarioBox.appendChild(fieldset);
+      sidebar.appendChild(scenarioBox);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initMap();
   new User("login", "username");
