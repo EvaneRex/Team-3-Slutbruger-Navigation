@@ -160,9 +160,22 @@ async function loadScenarios() {
 
       // Checkbokse til svarmulighederne
       const fieldset = document.createElement("fieldset");
+      scenarioBox.appendChild(desc);
+
+      let currentTaskIndex = 0;
+
+      // Lokationsmarker, opgaveområde og aktivering af området
+      const taskMarkers = [];
+      const taskAreas = [];
 
       scenario.tasks.forEach((task) => {
+        task.isActive = false;
+        task.isLocked = false;
+
         const div = document.createElement("div");
+        div.style.display = "none";
+        fieldset.appendChild(div);
+        task.element = div;
 
         task.options.forEach((opt, i) => {
           const checkbox = document.createElement("input");
@@ -178,45 +191,73 @@ async function loadScenarios() {
           div.appendChild(checkbox);
           div.appendChild(label);
         });
-
-        fieldset.appendChild(div);
       });
 
-      const btn = getElementById("scenarioBtn");
+      const btn = document.getElementById("scenarioBtn");
       btn.textContent = "Næste";
       btn.disabled = true;
-      scenario.appendChild(btn);
-
-      let currentTaskIndex = 0;
-
-      const taskMarkers = [];
-      const taskAreas = [];
+      scenarioBox.appendChild(btn);
 
       scenario.tasks.forEach((task) => {
         const marker = new google.maps.Marker({
-          position: { lat: task.geo.at, lng: task.geo.lng },
+          position: { lat: task.geo.lat, lng: task.geo.lng },
           map: map,
         });
         taskMarkers.push(marker);
 
         const areas = new google.maps.Circle({
-          strokecolor: FF0004,
+          map: map,
+          strokecolor: "#FF0004",
           strokeWeight: 5,
-          fillColor: FF0004,
+          fillColor: "#FF0004",
           fillOpacity: 0.3,
+          center: { lat: task.geo.lat, lng: task.geo.lng },
+          radius: task.geo.radius,
         });
         taskAreas.push(areas);
+
+        task.isActive = false;
 
         if (currentTaskIndex >= scenario.tasks.length) return;
 
         const distance = google.maps.geometry.spherical.computeDistanceBetween(
-          new google.maps.LatLng(pos.lat, pos.lng),
+          new google.maps.LatLng(pos.lat, pos.lng), //pos er ikke defineret
           new google.maps.LatLng(task.geo.lat, task.geo.lng)
         );
-      });
 
-      scenarioBox.appendChild(fieldset);
-      sidebar.appendChild(scenarioBox);
+        // hvis distancen på musen er mindre end radiussen på opgaven, så vises scenarieboksen
+        if (distance < task.geo.radius) {
+          task.element.style.display = "block"; // vi har ikke sat nogen tast element
+        } else {
+          task.element.style.display = "none";
+        }
+
+        areas.addEventListener("click", (e) => {
+          task.isActive = true;
+          areas.setOptions({
+            fillColor: "#597E50",
+            strokeColor: "#597E50",
+          });
+        });
+
+        // Mousemove
+        areas.addEventListener("mousemove", (e) => {
+          if (task.isActive === true) {
+            areas.setOptions({
+              fillColor: "#597E50",
+              strokeColor: "#597E50",
+            });
+          } else {
+            areas.setOptions({
+              fillColor: "#FF0004",
+              strokeColor: "#FF0004",
+            });
+          }
+        });
+
+        scenarioBox.appendChild(fieldset);
+        sidebar.appendChild(scenarioBox);
+      });
     });
   } catch (error) {
     console.error(error);
