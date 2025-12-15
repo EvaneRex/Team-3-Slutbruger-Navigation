@@ -1,5 +1,38 @@
 <!DOCTYPE html>
 <html lang="da">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hjemmeværnet</title>
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBS8o7EHKoUSrjAbsK3_IyU79mXurBAXng&map_ids=4a9e76db874d549f51ca87e9&libraries=geometry&callback=initMap"
+    async defer>
+    </script>
+  <link rel="stylesheet" href="/CSS/style.css" />
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <header>
+    <div>
+      <p id="username"></p>
+      <a id="logout" href="#">Log ud</a>
+    </div>
+    <a href="Index.html">
+      <img class="logoDesk" src="img/HJV.svg" alt="Logo" />
+      <img class="logoMobile" src="img/hjv_logo_svg.svg" alt="Logo" />
+    </a>
+  </header>
+
+  <main class="main">
+    <section id="sidebar">
+      <h1 id="headingOne"></h1>
+      <p id="introTxt"></p>
+
+      <!--Kassen med listen over opgaver -->
+      <div id="taskBox">
+        <h2></h2>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,56 +51,32 @@
         <p id="username"></p>
         <a id="logout" href="#">Log ud</a>
       </div>
-      <a href="Index.html">
-        <img class="logoDesk" src="img/HJV.svg" alt="Logo" />
-        <img class="logoMobile" src="img/hjv_logo_svg.svg" alt="Logo" />
-      </a>
-    </header>
 
-    <main class="main">
-      <section id="sidebar">
-        <h1 id="headingOne"></h1>
-        <p id="introTxt"></p>
+      <!--Kassen hvor scenarie opgaverne er inde i-->
+      <div id="scenarioBox">
+        <h2></h2>
+        <p></p>
+        <button></button>
+      </div>
+    </section>
 
-        <!--Kassen med listen over opgaver -->
-        <div id="taskBox">
-          <h2></h2>
-        </div>
+    <section id="content">
+      <div id="map"></div>
 
-        <!--Kassen hvor scenarie opgaverne er inde i-->
-        <div id="scenarioBox">
-          <h2></h2>
-          <p></p>
-          <button></button>
-        </div>
-      </section>
+      <!--Log in formular https://www.w3schools.com/howto/howto_css_login_form.asp-->
+      <div class="loginOverlay">
+        <form id="login">
+          <label for="usernameLogin">Brugernavn</label>
+          <input type="text" id="usernameLogin" name="usernameLogin" placeholder="Indtast dit brugernavn" required />
+          <label for="password">Adgangskode</label>
+          <input type="password" id="password" name="password" placeholder="Indtast din adgangskode" required />
+          <button type="submit">Log ind</button>
+        </form>
+      </div>
+    </section>
+  </main>
+  <!--Her er scenarie API-->
+  <script type="module" src="script.js"></script>
+</body>
 
-      <section id="content">
-        <div id="map"></div>
-
-        <!--Log in formular https://www.w3schools.com/howto/howto_css_login_form.asp-->
-        <div class="loginOverlay">
-          <form id="login">
-            <label for="usernameLogin">Brugernavn</label>
-            <input
-              type="text"
-              id="usernameLogin"
-              name="usernameLogin"
-              placeholder="Indtast dit brugernavn"
-              required
-            />
-            <label for="password">Adgangskode</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Indtast din adgangskode"
-              required
-            />
-            <button type="submit">Log ind</button>
-          </form>
-        </div>
-      </section>
-    </main>
-  </body>
 </html>
