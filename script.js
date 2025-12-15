@@ -50,6 +50,9 @@ class User {
   hideLogin() {
     this.loginForm.style.display = "none";
 
+    const overlay = this.loginForm.parentElement; // .loginOverlay
+  overlay.style.display = "none"; // skjul overlayet helt
+
     // lægger et overlay på kortet
     const maps = document.getElementById("map");
     maps.classList.remove("blur");
@@ -64,16 +67,18 @@ class User {
   }
 
   logout() {
+    const overlay = this.loginForm.parentElement;
+    overlay.style.display = "flex"; // vis overlay
+  
+    const maps = document.getElementById("map");
+    maps.classList.add("blur");
+  
     localStorage.removeItem("username");
     this.#username = "";
     this.headerUsername.textContent = "";
-    this.loginForm.style.display = "flex";
-
-    const maps = document.getElementById("map");
-    maps.classList.add("blur");
-
     this.logoutBtn.style.display = "none";
   }
+  
 
   getUsername() {
     return this.#username;
@@ -84,33 +89,38 @@ document.addEventListener("DOMContentLoaded", () => {
   new User("login", "username");
 });
 
-   // Globals
-   let map;
-    let playerMarker;
+// Globals
+let map;
+let playerMarker;
 
-    function initMap() {
-      // Default startcenter (kan senere sættes dynamisk)
-      const defaultCenter = { lat: 55.45, lng: 12.10 };
+// Init map
+async function initMap() {
+  const defaultCenter = { lat: 55.45, lng: 12.10 };
 
-      // Initialiser kortet med Map ID
-      map = new google.maps.Map(document.getElementById('map'), {
-        center: defaultCenter,
-        zoom: 15,
-      });
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: defaultCenter,
+    zoom: 15,
+    mapTypeId: 'satellite',
+    draggable: true,
+    gestureHandling: "auto"
+  });
 
-      // Opret marker for spilleren (mus)
-      playerMarker = new google.maps.Marker({
-        position: defaultCenter,
-        map: map,
-        label: "🧍",
-        title: "Spiller",
-        visible: false
-      });
+  // Marker for spiller
+  playerMarker = new google.maps.Marker({
+    position: map.getCenter(),
+    map: map,
+    title: "Spiller (mus)",
+    visible: false
+  });
 
-      // Flyt spiller med musen
-      map.addListener('mousemove', (e) => {
-        const pos = { lat: e.latLng.lat(), lng: e.latLng.lng() };
-        playerMarker.setPosition(pos);
-        playerMarker.setVisible(true);
-      });
-    }
+  // Flyt spiller med musen
+  map.addListener('mousemove', (e) => {
+    const pos = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+    playerMarker.setPosition(pos);
+    playerMarker.setVisible(true);
+  });
+}
+
+// Gør funktionen global
+window.initMap = initMap;
+
