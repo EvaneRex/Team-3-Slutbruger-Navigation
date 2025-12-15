@@ -90,10 +90,10 @@ let playerMarker;
 
 function initMap() {
   // Default startcenter (kan senere sættes dynamisk)
-  const defaultCenter = { lat: 55.45, lng: 12.10 };
+  const defaultCenter = { lat: 55.45, lng: 12.1 };
 
   // Initialiser kortet med Map ID
-  map = new google.maps.Map(document.getElementById('map'), {
+  map = new google.maps.Map(document.getElementById("map"), {
     center: defaultCenter,
     zoom: 15,
   });
@@ -104,11 +104,18 @@ function initMap() {
     map: map,
     label: "🧍",
     title: "Spiller",
-    visible: false
+    visible: false,
   });
 
   // Flyt spiller med musen
-  map.addListener('mousemove', (e) => {
+  map.addListener("mousemove", (e) => {
+    const pos = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+    playerMarker.setPosition(pos);
+    playerMarker.setVisible(true);
+  });
+
+  // Flyt spiller med musen
+  map.addListener("mousemove", (e) => {
     const pos = { lat: e.latLng.lat(), lng: e.latLng.lng() };
     playerMarker.setPosition(pos);
     playerMarker.setVisible(true);
@@ -118,10 +125,10 @@ function initMap() {
 // Henter API
 
 async function getTasks() {
-  const response = await fetch('./data/tasks.json');
+  const response = await fetch("./data/tasks.json");
 
   if (!response.ok) {
-    throw new Error('Kunne ikke hente tasks.json');
+    throw new Error("Kunne ikke hente tasks.json");
   }
 
   return response.json();

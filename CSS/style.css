@@ -73,7 +73,7 @@ body .main #content {
 }
 body .main #content #map {
   width: 100%;
-  height: 70vh;
+  height: 50vh;
 }
 body .main #content .loginOverlay {
   position: absolute;
