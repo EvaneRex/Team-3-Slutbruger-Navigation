@@ -73,7 +73,10 @@ body .main #content {
 }
 body .main #content #map {
   width: 100%;
-  height: 50vh;
+  height: 100%;
+}
+body .main #content .blur {
+  filter: blur(5px);
 }
 body .main #content .loginOverlay {
   position: absolute;

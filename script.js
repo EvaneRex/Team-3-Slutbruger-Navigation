@@ -1,4 +1,50 @@
-// Bruger klasse
+// Globals
+let map;
+let playerMarker;
+let mouseMoveListener;
+
+function initMap() {
+  const defaultCenter = { lat: 55.45, lng: 12.1 };
+
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: defaultCenter,
+    zoom: 15,
+  });
+
+  playerMarker = new google.maps.Marker({
+    position: defaultCenter,
+    map: map,
+    label: "🧍",
+    title: "Spiller",
+    visible: false,
+  });
+}
+
+function activatePlayerMarker() {
+  if (mouseMoveListener) return;
+
+  mouseMoveListener = map.addListener("mousemove", (e) => {
+    const pos = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+    playerMarker.setPosition(pos);
+    playerMarker.setVisible(true);
+  });
+
+  const mapDiv = document.getElementById("map");
+  mapDiv.classList.remove("blur");
+}
+
+function deactivatePlayerMarker() {
+  if (mouseMoveListener) {
+    google.maps.event.removeListener(mouseMoveListener);
+    mouseMoveListener = null;
+  }
+  if (playerMarker) playerMarker.setVisible(false);
+
+  const mapDiv = document.getElementById("map");
+  mapDiv.classList.add("blur");
+}
+
+// Opdater User-klassen
 class User {
   #username = "";
 
@@ -37,25 +83,19 @@ class User {
       this.#username = storedUser;
       this.updateHeader();
       this.hideLogin();
-
       this.logoutBtn.style.display = "inline";
     }
   }
 
-  // Smider brugernavnet op i headeren
   updateHeader() {
     this.headerUsername.textContent = this.#username;
   }
 
   hideLogin() {
     this.loginForm.style.display = "none";
-
-    const overlay = this.loginForm.parentElement; // .loginOverlay
-  overlay.style.display = "none"; // skjul overlayet helt
-
-    // lægger et overlay på kortet
-    const maps = document.getElementById("map");
-    maps.classList.remove("blur");
+    const overlay = document.querySelector(".loginOverlay");
+    if (overlay) overlay.style.display = "none";
+    activatePlayerMarker();
   }
 
   initLogout() {
@@ -67,61 +107,33 @@ class User {
   }
 
   logout() {
-    const overlay = this.loginForm.parentElement;
-    overlay.style.display = "flex"; // vis overlay
-  
-    const maps = document.getElementById("map");
-    maps.classList.add("blur");
-  
     localStorage.removeItem("username");
     this.#username = "";
     this.headerUsername.textContent = "";
+    this.loginForm.style.display = "flex";
     this.logoutBtn.style.display = "none";
+    const overlay = document.querySelector(".loginOverlay");
+    if (overlay) overlay.style.display = "flex";
+    deactivatePlayerMarker();
   }
-  
 
   getUsername() {
     return this.#username;
   }
 }
-// Kører klassen
+
 document.addEventListener("DOMContentLoaded", () => {
+  initMap();
   new User("login", "username");
 });
 
-// Globals
-let map;
-let playerMarker;
+// Henter API
+async function getTasks() {
+  const response = await fetch("./data/tasks.json");
 
+  if (!response.ok) {
+    throw new Error("Kunne ikke hente tasks.json");
+  }
 
-// Init map
-async function initMap() {
-  const defaultCenter = { lat: 55.45, lng: 12.10 };
-
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: defaultCenter,
-    zoom: 15,
-    mapTypeId: 'satellite',
-    draggable: true,
-    gestureHandling: "auto"
-  });
-
-  // Marker for spiller
-  playerMarker = new google.maps.Marker({
-    position: map.getCenter(),
-    map: map,
-    title: "Spiller (mus)",
-    visible: false
-  });
-
-  // Flyt spiller med musen
-  map.addListener('mousemove', (e) => {
-    const pos = { lat: e.latLng.lat(), lng: e.latLng.lng() };
-    playerMarker.setPosition(pos);
-    playerMarker.setVisible(true);
-  });
+  return response.json();
 }
-
-// Gør funktionen global
-window.initMap = initMap;
-
