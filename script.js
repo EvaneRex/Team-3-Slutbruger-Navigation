@@ -10,7 +10,6 @@ function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
     center: defaultCenter,
     zoom: 15,
-    
   });
 
   playerMarker = new google.maps.Marker({
@@ -47,7 +46,7 @@ function deactivatePlayerMarker() {
   mapDiv.classList.add("blur");
 }
 
-// Opdater User-klassen
+// Brugeradgang + sammenhæng med tekst
 // skal connectes med sidebaren, så den skifter når man er logget ind
 class User {
   #username = "";
@@ -129,7 +128,7 @@ class User {
   }
 }
 
-//
+// Vores tekst i sidebar
 const headingOne = document.getElementById("headingOne");
 const introTxt = document.getElementById("introTxt");
 function introTxtScreen(state) {
@@ -147,146 +146,145 @@ function introTxtScreen(state) {
   }
 }
 
-// Henter scenarier fra gruppe 3 og opsætter dem i deres boks
-async function loadScenarios() {
-  try {
-    const response = await fetch(
-      "https://api.jsonbin.io/v3/b/6939291ad0ea881f401efd5e",
-      {
-        headers: {
-          "x-access-key":
-            "$2a$10$rbxsXvTusL7oeoOTyUmf2.B7q7wRIbEty5zzAsWpoJMElkv1REKNS",
-        },
-      }
+// Hent scenarier fra API (gruppe 3)
+async function fetchScenariosFromAPI() {
+  const response = await fetch(
+    "https://api.jsonbin.io/v3/b/6939291ad0ea881f401efd5e",
+    {
+      headers: {
+        "x-access-key":
+          "$2a$10$rbxsXvTusL7oeoOTyUmf2.B7q7wRIbEty5zzAsWpoJMElkv1REKNS",
+      },
+    }
+  );
+  if (!response.ok) throw new Error("Kunne ikke hente API-data");
+  const data = await response.json();
+  return data.record.scenarios;
+}
+
+// Opretter opgave-elementer, inkl. checkbox
+function createTaskElements(task, fieldset) {
+  task.isActive = false;
+  task.isLocked = false;
+
+  const div = document.createElement("div");
+  div.style.display = "none";
+  fieldset.appendChild(div);
+  task.element = div;
+
+  task.options.forEach((opt, i) => {
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = `${task.taskId}-option-${i}`;
+    checkbox.name = `task-${task.taskId}`;
+    checkbox.value = opt;
+
+    const label = document.createElement("label");
+    label.setAttribute("for", checkbox.id);
+    label.textContent = opt;
+
+    div.appendChild(checkbox);
+    div.appendChild(label);
+  });
+}
+
+// Opretter marker og område på kortet
+function createMapMarkers(task) {
+  const marker = new google.maps.Marker({
+    position: { lat: task.geo.lat, lng: task.geo.lng },
+    map: map,
+  });
+
+  const area = new google.maps.Circle({
+    map: map,
+    strokeColor: "#FF0004",
+    strokeWeight: 5,
+    fillColor: "#FF0004",
+    fillOpacity: 0.3,
+    center: { lat: task.geo.lat, lng: task.geo.lng },
+    radius: task.geo.radius,
+  });
+
+  return { marker, area };
+}
+
+// Håndtering af opgave aktivering
+function handleTaskActivation(task, area, btn, currentTaskIndex) {
+  map.addListener("mousemove", (e) => {
+    const pos = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+    const distance = google.maps.geometry.spherical.computeDistanceBetween(
+      new google.maps.LatLng(pos.lat, pos.lng),
+      new google.maps.LatLng(task.geo.lat, task.geo.lng)
     );
 
-    if (!response.ok) throw new Error("Kunne ikke hente API-data");
+    introTxtScreen("taskActive");
 
-    const data = await response.json();
-    const scenarios = data.record.scenarios;
+    if (distance < task.geo.radius) {
+      task.isActive = true;
+      task.element.style.display = "block";
+      btn.disabled = false;
+
+      area.setOptions({ fillColor: "#597E50", strokeColor: "#597E50" });
+    } else {
+      task.isActive = false;
+      if (!task.isLocked) {
+        task.element.style.display = "none";
+        area.setOptions({ fillColor: "#FF0004", strokeColor: "#FF0004" });
+      }
+    }
+  });
+
+  area.addListener("click", () => {
+    task.isActive = true;
+    task.isLocked = true;
+    introTxtScreen("taskActive");
+
+    area.setOptions({ fillColor: "#597E50", strokeColor: "#597E50" });
+    currentTaskIndex++;
+  });
+}
+
+// Opretter scenarie boks
+function createScenarioBox(scenario) {
+  const scenarioBox = document.createElement("div");
+  scenarioBox.classList.add("opgaveBox");
+
+  const title = document.createElement("h2");
+  title.textContent = scenario.title;
+  scenarioBox.appendChild(title);
+
+  const desc = document.createElement("p");
+  desc.textContent = scenario.description;
+  scenarioBox.appendChild(desc);
+
+  const fieldset = document.createElement("fieldset");
+  scenarioBox.appendChild(fieldset);
+
+  const btn = document.getElementById("scenarioBtn");
+  btn.textContent = "Næste";
+  btn.disabled = true;
+  scenarioBox.appendChild(btn);
+
+  let currentTaskIndex = 0;
+  scenario.tasks.forEach((task) => {
+    createTaskElements(task, fieldset);
+    const { marker, area } = createMapMarkers(task, btn);
+    handleTaskActivation(task, area, btn, currentTaskIndex);
+  });
+
+  return scenarioBox;
+}
+
+// Loader scenarier
+async function loadScenarios() {
+  try {
+    const scenarios = await fetchScenariosFromAPI();
     const sidebar = document.getElementById("sidebar");
     sidebar.innerHTML = "";
 
-    // Bygger kassen i sidebaren
     scenarios.forEach((scenario) => {
-      const scenarioBox = document.createElement("div");
-      scenarioBox.classList.add("opgaveBox");
-
-      const title = document.createElement("h2");
-      title.textContent = scenario.title;
-      scenarioBox.appendChild(title);
-
-      const desc = document.createElement("p");
-      desc.textContent = scenario.description;
-      scenarioBox.appendChild(desc);
-
-      // Checkbokse til svarmulighederne
-      const fieldset = document.createElement("fieldset");
-      scenarioBox.appendChild(fieldset);
-
-      //------ Lokationsmarker, opgaveområde og aktivering af området
-      let currentTaskIndex = 0;
-      const taskMarkers = [];
-      const taskAreas = [];
-
-      scenario.tasks.forEach((task) => {
-        task.isActive = false;
-        task.isLocked = false;
-
-        const div = document.createElement("div");
-        div.style.display = "none";
-        fieldset.appendChild(div);
-        task.element = div;
-
-        task.options.forEach((opt, i) => {
-          const checkbox = document.createElement("input");
-          checkbox.type = "checkbox";
-          checkbox.id = `${task.taskId}-option-${i}`;
-          checkbox.name = `task-${task.taskId}`;
-          checkbox.value = opt;
-
-          const label = document.createElement("label");
-          label.setAttribute("for", checkbox.id);
-          label.textContent = opt;
-
-          div.appendChild(checkbox);
-          div.appendChild(label);
-        });
-      });
-
-      // Knappen der fører mellem opgaverne i scenariet
-      const btn = document.getElementById("scenarioBtn");
-      btn.textContent = "Næste";
-      btn.disabled = true;
-      scenarioBox.appendChild(btn);
-
-      // Markøren for opgaverne
-      scenario.tasks.forEach((task) => {
-        const marker = new google.maps.Marker({
-          position: { lat: task.geo.lat, lng: task.geo.lng },
-          map: map,
-        });
-        taskMarkers.push(marker);
-
-        // Markeringen af ikke aktive områder (af opgaverne)
-        const areas = new google.maps.Circle({
-          map: map,
-          strokeColor: "#FF0004",
-          strokeWeight: 5,
-          fillColor: "#FF0004",
-          fillOpacity: 0.3,
-          center: { lat: task.geo.lat, lng: task.geo.lng },
-          radius: task.geo.radius,
-        });
-        taskAreas.push(areas);
-
-        task.isActive = false;
-
-        if (currentTaskIndex >= scenario.tasks.length) return;
-
-        // Mousemove så opgaven visuelt markeret aktiv når brugerne kører musen over
-        map.addListener("mousemove", (e) => {
-          const pos = { lat: e.latLng.lat(), lng: e.latLng.lng() };
-          introTxtScreen("taskActive");
-
-          // hvis distancen på musen er mindre end radiussen på opgaven, så vises scenarieboksen
-          if (distance < task.geo.radius) {
-            task.isActive = true;
-            task.element.style.display = "block";
-            btn.disabled = false;
-
-            areas.setOptions({
-              fillColor: "#597E50",
-              strokeColor: "#597E50",
-            });
-          } else {
-            task.isActive = false;
-
-            if (!task.isLocked) {
-              task.element.style.display = "none";
-              areas.setOptions({
-                fillColor: "#FF0004",
-                strokeColor: "#FF0004",
-              });
-            }
-          }
-        });
-
-        // gør opgaven aktiv når brugeren klikker på den
-        areas.addListener("click", () => {
-          task.isActive = true;
-          task.isLocked = true;
-          introTxtScreen("taskActive");
-          areas.setOptions({
-            fillColor: "#597E50",
-            strokeColor: "#597E50",
-          });
-
-          currentTaskIndex++;
-        });
-      });
-      scenarioBox.appendChild(fieldset);
-      sidebar.appendChild(scenarioBox);
+      const box = createScenarioBox(scenario);
+      sidebar.appendChild(box);
     });
   } catch (error) {
     console.error(error);
