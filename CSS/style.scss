@@ -81,6 +81,15 @@ body {
 
         fieldset {
           border: none;
+          div {
+            display: flex;
+            align-items: center;
+            margin: 8px 0px;
+            @include partial.txt;
+            label {
+              margin-left: 5px;
+            }
+          }
         }
       }
 

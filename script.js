@@ -228,6 +228,8 @@ function createTaskElements(task, fieldset) {
   task.element = div;
 
   task.options.forEach((opt, i) => {
+    const wrapper = document.createElement("div");
+
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.id = `${task.taskId}-option-${i}`;
@@ -238,8 +240,9 @@ function createTaskElements(task, fieldset) {
     label.setAttribute("for", checkbox.id);
     label.textContent = opt;
 
-    div.appendChild(checkbox);
-    div.appendChild(label);
+    wrapper.appendChild(checkbox);
+    wrapper.appendChild(label);
+    div.appendChild(wrapper);
   });
 }
 

@@ -108,6 +108,20 @@ body .main #sidebar .opgaveBox p {
 body .main #sidebar .opgaveBox fieldset {
   border: none;
 }
+body .main #sidebar .opgaveBox fieldset div {
+  display: flex;
+  align-items: center;
+  margin: 8px 0px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: #080808;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 27px;
+  letter-spacing: -0.5px;
+}
+body .main #sidebar .opgaveBox fieldset div label {
+  margin-left: 5px;
+}
 body .main #sidebar button {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: #fdfdfd;
