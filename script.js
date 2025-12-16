@@ -9,28 +9,13 @@ let playerMarker;
 let mapInitialized = false;
 
 // style for lokationsmarkørerne
-const markerStyles = {
-  land: {
-    icon: {
-      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW, // https://developers.google.com/maps/documentation/javascript/symbols
-      scale: 8,
-      fillColor: "#597e50",
-      fillOpacity: 1,
-      strokeColor: "#fff",
-      strokeWeight: 2,
-    },
-  },
-  sea: {
-    icon: {
-      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-      scale: 8,
-      fillColor: "#002855",
-      fillOpacity: 1,
-      strokeColor: "#fff",
-      strokeWeight: 2,
-    },
-  },
-};
+function getTaskIcon(environment) {
+  return {
+    url: environment === "land" ? "img/haerpin.svg" : "img/soepin.svg",
+    scaledSize: new google.maps.Size(48, 48), // Øger størrelsen
+    anchor: new google.maps.Point(24, 48), // justere den til midten af opgaven
+  };
+}
 
 //Google maps
 function initMap() {
@@ -245,13 +230,10 @@ async function loadScenarios() {
     scenario.tasks.forEach((task, i) => {
       task.index = i;
 
-      //tjekker hvilket miljø scenariet er i(så markøren skifter farve efter det)
-      const env = task.environment || scenario.type;
-
       task.marker = new google.maps.Marker({
         position: task.geo,
         map: i === 0 ? map : null,
-        icon: markerStyles[env].icon,
+        icon: getTaskIcon(task.environment),
       });
 
       task.circle = new google.maps.Circle({
