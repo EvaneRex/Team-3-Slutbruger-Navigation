@@ -20,10 +20,10 @@ $txt-light: #fdfdfd;
 $font: Verdana, Geneva, Tahoma, sans-serif;
 
 // Overskrifter
-@mixin h1 {
+@mixin h1($h1-size: 46px) {
   font-family: $font;
   color: $txt-dark;
-  font-size: 46px;
+  font-size: $h1-size;
   font-weight: 700;
   line-height: 54px;
   letter-spacing: -2px;

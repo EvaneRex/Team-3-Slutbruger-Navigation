@@ -1,6 +1,4 @@
-/**************************************************
- * GLOBALS (URET – KUN BRUGT KORREKT)
- **************************************************/
+// Globals
 let map;
 let mouseMoveListener;
 
@@ -13,9 +11,7 @@ let mapInitialized = false;
 
 
 
-/**************************************************
- * GOOGLE MAP INIT
- **************************************************/
+//Google maps 
 function initMap() {
   if (mapInitialized) return; // forhindrer dobbelt init
   mapInitialized = true;
@@ -32,11 +28,28 @@ function initMap() {
   });
 }
 
+// Håndtering af playerMarker aktiveret/deaktiveret
+function activatePlayerMarker() {
+  if (mouseMoveListener) return;
 
 
-/**************************************************
- * LOGIN (URET)
- **************************************************/
+  const mapDiv = document.getElementById("map");
+  mapDiv.classList.remove("blur");
+}
+
+function deactivatePlayerMarker() {
+  if (mouseMoveListener) {
+    google.maps.event.removeListener(mouseMoveListener);
+    mouseMoveListener = null;
+  }
+  if (playerMarker) playerMarker.setVisible(false);
+
+  const mapDiv = document.getElementById("map");
+  mapDiv.classList.add("blur");
+}
+
+// Brugeradgang + sammenhæng med tekst
+// skal connectes med sidebaren, så den skifter når man er logget ind
 class User {
   #username = "";
 
@@ -47,18 +60,22 @@ class User {
 
     this.checkLocalStorage();
     this.initLogin();
+    this.initLogout();
   }
 
   initLogin() {
     this.loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      if (usernameLogin.value === "1" && password.value === "1") {
-        localStorage.setItem("username", "1");
-        this.#username = "1";
-        this.headerUsername.textContent = "1";
-        this.loginForm.style.display = "none";
-        document.querySelector(".loginOverlay").style.display = "none";
+      const username = document.getElementById("usernameLogin").value;
+      const password = document.getElementById("password").value;
+
+      if (username === "1" && password === "1") {
+        this.#username = username;
+        this.updateHeader();
+        this.hideLogin();
+        introTxtScreen("loggedIn", this.username);
+        localStorage.setItem("username", username);
         document.getElementById("map").classList.remove("blur");
         this.logoutBtn.style.display = "inline";
 
@@ -70,20 +87,60 @@ class User {
   }
 
   checkLocalStorage() {
-    if (localStorage.getItem("username")) {
-      this.headerUsername.textContent = "1";
-      document.querySelector(".loginOverlay").style.display = "none";
-      document.getElementById("map").classList.remove("blur");
+    const storedUser = localStorage.getItem("username");
+    if (storedUser) {
+      this.#username = storedUser;
+      this.updateHeader();
+      this.hideLogin();
       this.logoutBtn.style.display = "inline";
+      document.getElementById("map").classList.remove("blur");
+
 
       loadScenarios().then(setupMouseMove);
     }
   }
+
+  updateHeader() {
+    this.headerUsername.textContent = this.#username;
+  }
+
+  hideLogin() {
+    this.loginForm.style.display = "none";
+    const overlay = document.querySelector(".loginOverlay");
+    if (overlay) overlay.style.display = "none";
+
+    //loadScenarios();
+
+    //introTxtScreen("loggedIn");
+  }
+
+  initLogout() {
+    if (!this.logoutBtn) return;
+    this.logoutBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      this.logout();
+    });
+  }
+
+  logout() {
+    localStorage.removeItem("username");
+    introTxtScreen("loggedOut");
+
+    this.#username = "";
+    this.headerUsername.textContent = "";
+    this.loginForm.style.display = "flex";
+    this.logoutBtn.style.display = "none";
+    const overlay = document.querySelector(".loginOverlay");
+    if (overlay) overlay.style.display = "flex";
+    deactivatePlayerMarker();
+  }
+
+  getUsername() {
+    return this.#username;
+  }
 }
 
-/**************************************************
- * SIDEBAR TEXT
- **************************************************/
+// Vores tekst i sidebar
 const headingOne = document.getElementById("headingOne");
 const introTxt = document.getElementById("introTxt");
 
@@ -102,15 +159,14 @@ function introTxtScreen(state) {
       "Udforsk kortet for at finde opgaver.";
   }
 
+  //evt taskActive
   if (state === "task") {
     headingOne.textContent = "Scenarie";
     introTxt.style.display = "none";
   }
 }
 
-/**************************************************
- * UI HELPERS
- **************************************************/
+// UI funktioner sættes ind
 function showExploreUI() {
   document.getElementById("taskBox").style.display = "block";
   document.getElementById("activeTaskBox").style.display = "none";
@@ -139,9 +195,7 @@ function showTaskUI(task, locked) {
     locked ? "block" : "none";
 }
 
-/**************************************************
- * API
- **************************************************/
+// Henter gruppens 3 API
 async function fetchScenariosFromAPI() {
   const res = await fetch(
     "https://api.jsonbin.io/v3/b/6939291ad0ea881f401efd5e",
@@ -152,14 +206,13 @@ async function fetchScenariosFromAPI() {
       },
     }
   );
-
+  
+  if (!response.ok) throw new Error("Kunne ikke hente API-data");
   const data = await res.json();
   return data.record.scenarios;
 }
 
-/**************************************************
- * LOAD SCENARIOS
- **************************************************/
+// Load scenarier
 async function loadScenarios() {
   allScenarios = await fetchScenariosFromAPI();
 
@@ -186,9 +239,7 @@ async function loadScenarios() {
   showExploreUI();
 }
 
-/**************************************************
- * MOUSEMOVE = PREVIEW (FIXET)
- **************************************************/
+// Mus funktion 
 function setupMouseMove() {
   if (mouseMoveListener) return;
 
@@ -302,5 +353,5 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
 document.addEventListener("DOMContentLoaded", () => {
   initMap();
   new User("login", "username");
-  introTxtScreen("loggedOut");
+    introTxtScreen("loggedOut");
 });
