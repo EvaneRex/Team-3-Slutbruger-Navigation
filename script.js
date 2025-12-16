@@ -10,6 +10,7 @@ function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
     center: defaultCenter,
     zoom: 15,
+    
   });
 
   playerMarker = new google.maps.Marker({
