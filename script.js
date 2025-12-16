@@ -99,7 +99,12 @@ class User {
     this.loginForm.style.display = "none";
     const overlay = document.querySelector(".loginOverlay");
     if (overlay) overlay.style.display = "none";
+
     activatePlayerMarker();
+
+    loadScenarios();
+
+    introTxtScreen("loggedIn");
   }
 
   initLogout() {
@@ -217,14 +222,13 @@ function handleTaskActivation(task, area, btn, currentTaskIndex) {
       new google.maps.LatLng(task.geo.lat, task.geo.lng)
     );
 
-    introTxtScreen("taskActive");
-
     if (distance < task.geo.radius) {
       task.isActive = true;
       task.element.style.display = "block";
       btn.disabled = false;
 
       area.setOptions({ fillColor: "#597E50", strokeColor: "#597E50" });
+      introTxtScreen("taskActive");
     } else {
       task.isActive = false;
       if (!task.isLocked) {
@@ -282,7 +286,7 @@ function createScenarioBox(scenario) {
 async function loadScenarios() {
   try {
     const scenarios = await fetchScenariosFromAPI();
-    const sidebar = document.getElementById("sidebar");
+    const sidebar = document.getElementById("scenarioBox");
     sidebar.innerHTML = "";
 
     scenarios.forEach((scenario) => {
@@ -299,6 +303,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initMap();
   new User("login", "username");
   activatePlayerMarker();
-  loadScenarios();
-  introTxtScreen("loggedIn");
+  introTxtScreen("loggedOut");
 });
