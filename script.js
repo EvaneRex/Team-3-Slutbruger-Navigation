@@ -28,25 +28,26 @@ function initMap() {
   });
 }
 
+
 // Håndtering af playerMarker aktiveret/deaktiveret
-function activatePlayerMarker() {
-  if (mouseMoveListener) return;
+// function activatePlayerMarker() {
+//   if (mouseMoveListener) return;
 
 
-  const mapDiv = document.getElementById("map");
-  mapDiv.classList.remove("blur");
-}
+//   const mapDiv = document.getElementById("map");
+//   mapDiv.classList.remove("blur");
+// }
 
-function deactivatePlayerMarker() {
-  if (mouseMoveListener) {
-    google.maps.event.removeListener(mouseMoveListener);
-    mouseMoveListener = null;
-  }
-  if (playerMarker) playerMarker.setVisible(false);
+// function deactivatePlayerMarker() {
+//   if (mouseMoveListener) {
+//     google.maps.event.removeListener(mouseMoveListener);
+//     mouseMoveListener = null;
+//   }
+//   if (playerMarker) playerMarker.setVisible(false);
 
-  const mapDiv = document.getElementById("map");
-  mapDiv.classList.add("blur");
-}
+//   const mapDiv = document.getElementById("map");
+//   mapDiv.classList.add("blur");
+// }
 
 // Brugeradgang + sammenhæng med tekst
 // skal connectes med sidebaren, så den skifter når man er logget ind
@@ -150,13 +151,13 @@ function introTxtScreen(state) {
   if (state === "loggedOut") {
     headingOne.textContent = "Velkommen";
     introTxt.innerHTML =
-      "Dette er Hjemmeværnsskolens øvelsesplatform.";
+      "Dette er Hjemmeværnsskolens øvelsesplatform.<br>Når du er logget ind, vil opgaver automatisk blive aktiveret, når du nærmer dig den tildelte øvelseszone.";
   }
 
   if (state === "loggedIn") {
     headingOne.textContent = "Udforsk";
     introTxt.innerHTML =
-      "Udforsk kortet for at finde opgaver.";
+      "Udforsk kortet for at lokalisere yderligere opgaver i dit område.<br>Hvis der ikke fremgår aktive opgaver, returnér da til base.";
   }
 
   //evt taskActive
@@ -207,7 +208,6 @@ async function fetchScenariosFromAPI() {
     }
   );
   
-  if (!response.ok) throw new Error("Kunne ikke hente API-data");
   const data = await res.json();
   return data.record.scenarios;
 }
@@ -279,6 +279,7 @@ function setupMouseMove() {
 
           showTaskUI(task, false);
           introTxtScreen("task");
+
         } else {
           task.circle.setOptions({
             fillColor: "#FF0004",
@@ -288,7 +289,7 @@ function setupMouseMove() {
       });
     });
 
-    // 🔄 ikke i nogen radius → tilbage til udforsk
+    // ikke i nogen radius → tilbage til udforsk
     if (!insideAny && !lockedTask) {
       activeScenario = null;
       activeTaskIndex = null;
@@ -298,7 +299,7 @@ function setupMouseMove() {
     }
   });
 
-  // CLICK = lås (samme som før, bare mere stabilt)
+  // CLICK = lås 
   map.addListener("click", () => {
     if (!activeScenario || activeTaskIndex === null) return;
     if (lockedTask) return;
@@ -313,9 +314,7 @@ function setupMouseMove() {
 }
 
 
-/**************************************************
- * NEXT / FINISH (URET LOGIK, BARE STABIL)
- **************************************************/
+//Sidste boks med afslutning 
 document.getElementById("nextTaskBtn").addEventListener("click", () => {
   const scenario = activeScenario;
   const task = scenario.tasks[activeTaskIndex];
@@ -347,9 +346,7 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
   }
 });
 
-/**************************************************
- * START
- **************************************************/
+// Opstart 
 document.addEventListener("DOMContentLoaded", () => {
   initMap();
   new User("login", "username");
