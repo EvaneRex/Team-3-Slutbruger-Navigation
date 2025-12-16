@@ -298,7 +298,6 @@ async function loadScenarios() {
 document.addEventListener("DOMContentLoaded", () => {
   initMap();
   new User("login", "username");
-
   activatePlayerMarker();
   loadScenarios();
   introTxtScreen("loggedIn");
