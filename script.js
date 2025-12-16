@@ -1,13 +1,36 @@
 // Globals
 let map;
 let mouseMoveListener;
-
 let allScenarios = [];
 let activeScenario = null;
 let activeTaskIndex = null;
 let lockedTask = false;
 let playerMarker;
 let mapInitialized = false;
+
+// style for lokationsmarkørerne
+const markerStyles = {
+  land: {
+    icon: {
+      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW, // https://developers.google.com/maps/documentation/javascript/symbols
+      scale: 8,
+      fillColor: "#597e50",
+      fillOpacity: 1,
+      strokeColor: "#fff",
+      strokeWeight: 2,
+    },
+  },
+  sea: {
+    icon: {
+      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+      scale: 8,
+      fillColor: "#002855",
+      fillOpacity: 1,
+      strokeColor: "#fff",
+      strokeWeight: 2,
+    },
+  },
+};
 
 //Google maps
 function initMap() {
@@ -17,6 +40,7 @@ function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
     center: { lat: 55.8825, lng: 8.237 },
     zoom: 10,
+    mapTypeId: "hybrid",
   });
 
   playerMarker = new google.maps.Marker({
@@ -197,7 +221,7 @@ function showTaskUI(task, locked) {
     : "none";
 }
 
-// Henter gruppens 3 API
+// Henter gruppe 3 API
 async function fetchScenariosFromAPI() {
   const res = await fetch(
     "https://api.jsonbin.io/v3/b/6939291ad0ea881f401efd5e",
@@ -221,9 +245,13 @@ async function loadScenarios() {
     scenario.tasks.forEach((task, i) => {
       task.index = i;
 
+      //tjekker hvilket miljø scenariet er i(så markøren skifter farve efter det)
+      const env = task.environment || scenario.type;
+
       task.marker = new google.maps.Marker({
         position: task.geo,
         map: i === 0 ? map : null,
+        icon: markerStyles[env].icon,
       });
 
       task.circle = new google.maps.Circle({
