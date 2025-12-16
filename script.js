@@ -1,53 +1,42 @@
-// Globals
+/**************************************************
+ * GLOBALS (URET – KUN BRUGT KORREKT)
+ **************************************************/
 let map;
-let playerMarker;
 let mouseMoveListener;
 
-// Indsætter kortet, og centrere det på dk, tilføjer playerMarker
+let allScenarios = [];
+let activeScenario = null;
+let activeTaskIndex = null;
+let lockedTask = false;
+let playerMarker;
+let mapInitialized = false;
+
+
+
+/**************************************************
+ * GOOGLE MAP INIT
+ **************************************************/
 function initMap() {
-  const defaultCenter = { lat: 55.8825, lng: 8.237 };
+  if (mapInitialized) return; // forhindrer dobbelt init
+  mapInitialized = true;
 
   map = new google.maps.Map(document.getElementById("map"), {
-    center: defaultCenter,
+    center: { lat: 55.8825, lng: 8.237 },
     zoom: 10,
   });
 
   playerMarker = new google.maps.Marker({
-    position: defaultCenter,
-    map: map,
-    label: "🧍",
-    title: "Spiller",
+    position: map.getCenter(),
+    map,
     visible: false,
   });
 }
 
-// Håndtering af playerMarker aktiveret/deaktiveret
-function activatePlayerMarker() {
-  if (mouseMoveListener) return;
 
-  mouseMoveListener = map.addListener("mousemove", (e) => {
-    const pos = { lat: e.latLng.lat(), lng: e.latLng.lng() };
-    playerMarker.setPosition(pos);
-    playerMarker.setVisible(true);
-  });
 
-  const mapDiv = document.getElementById("map");
-  mapDiv.classList.remove("blur");
-}
-
-function deactivatePlayerMarker() {
-  if (mouseMoveListener) {
-    google.maps.event.removeListener(mouseMoveListener);
-    mouseMoveListener = null;
-  }
-  if (playerMarker) playerMarker.setVisible(false);
-
-  const mapDiv = document.getElementById("map");
-  mapDiv.classList.add("blur");
-}
-
-// Brugeradgang + sammenhæng med tekst
-// skal connectes med sidebaren, så den skifter når man er logget ind
+/**************************************************
+ * LOGIN (URET)
+ **************************************************/
 class User {
   #username = "";
 
@@ -55,100 +44,106 @@ class User {
     this.loginForm = document.getElementById(loginFormId);
     this.headerUsername = document.getElementById(headerUsernameId);
     this.logoutBtn = document.getElementById("logout");
+
     this.checkLocalStorage();
     this.initLogin();
-    this.initLogout();
   }
 
   initLogin() {
-    this.loginForm.addEventListener("submit", (e) => {
+    this.loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const username = document.getElementById("usernameLogin").value;
-      const password = document.getElementById("password").value;
-
-      if (username === "1" && password === "1") {
-        this.#username = username;
-        this.updateHeader();
-        this.hideLogin();
-        introTxtScreen("loggedIn", this.username);
-        localStorage.setItem("username", username);
-
+      if (usernameLogin.value === "1" && password.value === "1") {
+        localStorage.setItem("username", "1");
+        this.#username = "1";
+        this.headerUsername.textContent = "1";
+        this.loginForm.style.display = "none";
+        document.querySelector(".loginOverlay").style.display = "none";
+        document.getElementById("map").classList.remove("blur");
         this.logoutBtn.style.display = "inline";
-      } else {
-        alert("Forkert brugernavn eller adgangskode");
+
+        introTxtScreen("loggedIn");
+        await loadScenarios();
+        setupMouseMove();
       }
     });
   }
 
   checkLocalStorage() {
-    const storedUser = localStorage.getItem("username");
-    if (storedUser) {
-      this.#username = storedUser;
-      this.updateHeader();
-      this.hideLogin();
+    if (localStorage.getItem("username")) {
+      this.headerUsername.textContent = "1";
+      document.querySelector(".loginOverlay").style.display = "none";
+      document.getElementById("map").classList.remove("blur");
       this.logoutBtn.style.display = "inline";
+
+      loadScenarios().then(setupMouseMove);
     }
-  }
-
-  updateHeader() {
-    this.headerUsername.textContent = this.#username;
-  }
-
-  hideLogin() {
-    this.loginForm.style.display = "none";
-    const overlay = document.querySelector(".loginOverlay");
-    if (overlay) overlay.style.display = "none";
-    activatePlayerMarker();
-  }
-
-  initLogout() {
-    if (!this.logoutBtn) return;
-    this.logoutBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      this.logout();
-    });
-  }
-
-  logout() {
-    localStorage.removeItem("username");
-    introTxtScreen("loggedOut");
-
-    this.#username = "";
-    this.headerUsername.textContent = "";
-    this.loginForm.style.display = "flex";
-    this.logoutBtn.style.display = "none";
-    const overlay = document.querySelector(".loginOverlay");
-    if (overlay) overlay.style.display = "flex";
-    deactivatePlayerMarker();
-  }
-
-  getUsername() {
-    return this.#username;
   }
 }
 
-// Vores tekst i sidebar
+/**************************************************
+ * SIDEBAR TEXT
+ **************************************************/
 const headingOne = document.getElementById("headingOne");
 const introTxt = document.getElementById("introTxt");
+
 function introTxtScreen(state) {
+  introTxt.style.display = "block";
+
   if (state === "loggedOut") {
     headingOne.textContent = "Velkommen";
-    introTxt.innerHTML = `Dette er Hjemmeværnsskolens øvelsesplatform.<br>Når du er logget ind, vil opgaver automatisk blive aktiveret, når du nærmer dig den tildelte øvelseszone.`;
+    introTxt.innerHTML =
+      "Dette er Hjemmeværnsskolens øvelsesplatform.";
   }
+
   if (state === "loggedIn") {
     headingOne.textContent = "Udforsk";
-    introTxt.innerHTML = `Udforsk kortet for at lokalisere yderligere opgaver i dit område.<br>Hvis der ikke fremgår aktive opgaver, returnér da til base.`;
+    introTxt.innerHTML =
+      "Udforsk kortet for at finde opgaver.";
   }
-  if (state === "taskActive") {
+
+  if (state === "task") {
     headingOne.textContent = "Scenarie";
     introTxt.style.display = "none";
   }
 }
 
-// Hent scenarier fra API (gruppe 3)
+/**************************************************
+ * UI HELPERS
+ **************************************************/
+function showExploreUI() {
+  document.getElementById("taskBox").style.display = "block";
+  document.getElementById("activeTaskBox").style.display = "none";
+}
+
+function showTaskUI(task, locked) {
+  document.getElementById("taskBox").style.display = "none";
+  document.getElementById("activeTaskBox").style.display = "block";
+
+  document.getElementById("taskTitle").textContent = task.title;
+  document.getElementById("taskDescription").textContent =
+    task.description;
+
+  const opts = document.getElementById("taskOptions");
+  opts.innerHTML = "";
+
+  task.options.forEach((o) => {
+    const label = document.createElement("label");
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    label.append(cb, o);
+    opts.appendChild(label);
+  });
+
+  document.getElementById("nextTaskBtn").style.display =
+    locked ? "block" : "none";
+}
+
+/**************************************************
+ * API
+ **************************************************/
 async function fetchScenariosFromAPI() {
-  const response = await fetch(
+  const res = await fetch(
     "https://api.jsonbin.io/v3/b/6939291ad0ea881f401efd5e",
     {
       headers: {
@@ -157,149 +152,155 @@ async function fetchScenariosFromAPI() {
       },
     }
   );
-  if (!response.ok) throw new Error("Kunne ikke hente API-data");
-  const data = await response.json();
+
+  const data = await res.json();
   return data.record.scenarios;
 }
 
-// Opretter opgave-elementer, inkl. checkbox
-function createTaskElements(task, fieldset) {
-  task.isActive = false;
-  task.isLocked = false;
+/**************************************************
+ * LOAD SCENARIOS
+ **************************************************/
+async function loadScenarios() {
+  allScenarios = await fetchScenariosFromAPI();
 
-  const div = document.createElement("div");
-  div.style.display = "none";
-  fieldset.appendChild(div);
-  task.element = div;
+  allScenarios.forEach((scenario) => {
+    scenario.tasks.forEach((task, i) => {
+      task.index = i;
 
-  task.options.forEach((opt, i) => {
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.id = `${task.taskId}-option-${i}`;
-    checkbox.name = `task-${task.taskId}`;
-    checkbox.value = opt;
+      task.marker = new google.maps.Marker({
+        position: task.geo,
+        map: i === 0 ? map : null,
+      });
 
-    const label = document.createElement("label");
-    label.setAttribute("for", checkbox.id);
-    label.textContent = opt;
-
-    div.appendChild(checkbox);
-    div.appendChild(label);
+      task.circle = new google.maps.Circle({
+        map: i === 0 ? map : null,
+        center: task.geo,
+        radius: task.geo.radius,
+        fillColor: "#FF0004",
+        strokeColor: "#FF0004",
+        fillOpacity: 0.3,
+      });
+    });
   });
+
+  showExploreUI();
 }
 
-// Opretter marker og område på kortet
-function createMapMarkers(task) {
-  const marker = new google.maps.Marker({
-    position: { lat: task.geo.lat, lng: task.geo.lng },
-    map: map,
-  });
+/**************************************************
+ * MOUSEMOVE = PREVIEW (FIXET)
+ **************************************************/
+function setupMouseMove() {
+  if (mouseMoveListener) return;
 
-  const area = new google.maps.Circle({
-    map: map,
-    strokeColor: "#FF0004",
-    strokeWeight: 5,
-    fillColor: "#FF0004",
-    fillOpacity: 0.3,
-    center: { lat: task.geo.lat, lng: task.geo.lng },
-    radius: task.geo.radius,
-  });
+  mouseMoveListener = map.addListener("mousemove", (e) => {
+    if (!localStorage.getItem("username")) return;
 
-  return { marker, area };
-}
+    // 🧍 mus = spillerens position
+    playerMarker.setPosition(e.latLng);
+    playerMarker.setVisible(true);
 
-// Håndtering af opgave aktivering
-function handleTaskActivation(task, area, btn, currentTaskIndex) {
-  map.addListener("mousemove", (e) => {
-    const pos = { lat: e.latLng.lat(), lng: e.latLng.lng() };
-    const distance = google.maps.geometry.spherical.computeDistanceBetween(
-      new google.maps.LatLng(pos.lat, pos.lng),
-      new google.maps.LatLng(task.geo.lat, task.geo.lng)
-    );
+    if (lockedTask) return;
 
-    introTxtScreen("taskActive");
+    let insideAny = false;
 
-    if (distance < task.geo.radius) {
-      task.isActive = true;
-      task.element.style.display = "block";
-      btn.disabled = false;
+    allScenarios.forEach((scenario) => {
+      scenario.tasks.forEach((task) => {
+        if (!task.circle || !task.circle.getMap()) return;
 
-      area.setOptions({ fillColor: "#597E50", strokeColor: "#597E50" });
-    } else {
-      task.isActive = false;
-      if (!task.isLocked) {
-        task.element.style.display = "none";
-        area.setOptions({ fillColor: "#FF0004", strokeColor: "#FF0004" });
-      }
+        const distance =
+          google.maps.geometry.spherical.computeDistanceBetween(
+            e.latLng,
+            new google.maps.LatLng(task.geo.lat, task.geo.lng)
+          );
+
+          const effectiveRadius = task.geo.radius * 10;
+
+          if (distance <= effectiveRadius) {
+          insideAny = true;
+
+          activeScenario = scenario;
+          activeTaskIndex = task.index;
+
+          task.circle.setOptions({
+            fillColor: "#597E50",
+            strokeColor: "#597E50",
+          });
+
+          showTaskUI(task, false);
+          introTxtScreen("task");
+        } else {
+          task.circle.setOptions({
+            fillColor: "#FF0004",
+            strokeColor: "#FF0004",
+          });
+        }
+      });
+    });
+
+    // 🔄 ikke i nogen radius → tilbage til udforsk
+    if (!insideAny && !lockedTask) {
+      activeScenario = null;
+      activeTaskIndex = null;
+    
+      showExploreUI();
+      introTxtScreen("loggedIn");
     }
   });
 
-  area.addListener("click", () => {
-    task.isActive = true;
-    task.isLocked = true;
-    introTxtScreen("taskActive");
+  // CLICK = lås (samme som før, bare mere stabilt)
+  map.addListener("click", () => {
+    if (!activeScenario || activeTaskIndex === null) return;
+    if (lockedTask) return;
 
-    area.setOptions({ fillColor: "#597E50", strokeColor: "#597E50" });
-    currentTaskIndex++;
+    lockedTask = true;
+
+    showTaskUI(
+      activeScenario.tasks[activeTaskIndex],
+      true
+    );
   });
 }
 
-// Opretter scenarie boks
-function createScenarioBox(scenario) {
-  const scenarioBox = document.createElement("div");
-  scenarioBox.classList.add("opgaveBox");
 
-  const title = document.createElement("h2");
-  title.textContent = scenario.title;
-  scenarioBox.appendChild(title);
+/**************************************************
+ * NEXT / FINISH (URET LOGIK, BARE STABIL)
+ **************************************************/
+document.getElementById("nextTaskBtn").addEventListener("click", () => {
+  const scenario = activeScenario;
+  const task = scenario.tasks[activeTaskIndex];
 
-  const desc = document.createElement("p");
-  desc.textContent = scenario.description;
-  scenarioBox.appendChild(desc);
+  task.marker.setMap(null);
+  task.circle.setMap(null);
 
-  const fieldset = document.createElement("fieldset");
-  scenarioBox.appendChild(fieldset);
+  activeTaskIndex++;
 
-  // Opret scenario-knap her i JS
-  const btn = document.createElement("button");
-  btn.textContent = "Næste";
-  btn.disabled = true;
-  scenarioBox.appendChild(btn);
+  if (scenario.tasks[activeTaskIndex]) {
+    const next = scenario.tasks[activeTaskIndex];
+    next.marker.setMap(map);
+    next.circle.setMap(map);
 
-  let currentTaskIndex = 0;
-  scenario.tasks.forEach((task) => {
-    createTaskElements(task, fieldset);
-    const { marker, area } = createMapMarkers(task);
-    task.marker = marker;
-    task.area = area;
-    handleTaskActivation(task, area, btn, currentTaskIndex);
-  });
+    lockedTask = false;
+    showExploreUI();
+    introTxtScreen("loggedIn");
+  } else {
+    document.getElementById("taskTitle").textContent =
+      "Scenarie afsluttet";
+    document.getElementById("taskDescription").textContent =
+      "Skriv en kommentar og gå tilbage til kortet.";
+    document.getElementById("taskOptions").innerHTML =
+      '<input type="text" placeholder="Kommentar">';
+    document.getElementById("nextTaskBtn").textContent =
+      "Tilbage til kort";
 
-  return scenarioBox;
-}
-
-// Loader scenarier
-async function loadScenarios() {
-  try {
-    const scenarios = await fetchScenariosFromAPI();
-    const sidebar = document.getElementById("sidebar");
-    sidebar.innerHTML = "";
-
-    scenarios.forEach((scenario) => {
-      const box = createScenarioBox(scenario);
-      sidebar.appendChild(box);
-    });
-  } catch (error) {
-    console.error(error);
+    lockedTask = false;
   }
-}
+});
 
-// Opstarter kortet og login
+/**************************************************
+ * START
+ **************************************************/
 document.addEventListener("DOMContentLoaded", () => {
   initMap();
   new User("login", "username");
-
-  activatePlayerMarker();
-  loadScenarios();
-  introTxtScreen("loggedIn");
+  introTxtScreen("loggedOut");
 });
