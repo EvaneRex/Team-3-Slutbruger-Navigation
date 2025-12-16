@@ -246,11 +246,6 @@ async function loadScenarios() {
         // Mousemove så opgaven visuelt markeret aktiv når brugerne kører musen over
         map.addListener("mousemove", (e) => {
           const pos = { lat: e.latLng.lat(), lng: e.latLng.lng() };
-          const distance =
-            google.maps.geometry.spherical.computeDistanceBetween(
-              new google.maps.LatLng(pos.lat, pos.lng),
-              new google.maps.LatLng(task.geo.lat, task.geo.lng)
-            );
           introTxtScreen("taskActive");
 
           // hvis distancen på musen er mindre end radiussen på opgaven, så vises scenarieboksen
