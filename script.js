@@ -20,6 +20,48 @@ function initMap() {
     visible: false,
   });
 }
+function setupTaskMouseMove() {
+  map.addListener("mousemove", (e) => {
+    if (!localStorage.getItem("username")) return;
+
+    const mousePos = e.latLng;
+    let anyTaskActive = false;
+
+    allTasks.forEach((task) => {
+      if (task.isLocked) return;
+
+      const distance = google.maps.geometry.spherical.computeDistanceBetween(
+        mousePos,
+        new google.maps.LatLng(task.geo.lat, task.geo.lng)
+      );
+
+      if (distance <= task.geo.radius) {
+        task.isActive = true;
+        task.element.style.display = "block";
+        task.area.setOptions({
+          fillColor: "#597E50",
+          strokeColor: "#597E50",
+        });
+        anyTaskActive = true;
+      } else {
+        task.isActive = false;
+        task.element.style.display = "none";
+        task.area.setOptions({
+          fillColor: "#FF0004",
+          strokeColor: "#FF0004",
+        });
+      }
+    });
+
+    // Skift tekst korrekt
+    if (anyTaskActive) {
+      introTxtScreen("taskActive");
+    } else {
+      introTxtScreen("loggedIn");
+      introTxt.style.display = "block";
+    }
+  });
+}
 
 // Håndtering af playerMarker aktiveret/deaktiveret
 function activatePlayerMarker() {
@@ -78,6 +120,14 @@ class User {
       } else {
         alert("Forkert brugernavn eller adgangskode");
       }
+
+      activatePlayerMarker();
+
+      loadScenarios().then(() => {
+        setupTaskMouseMove();
+      });
+
+      introTxtScreen("loggedIn");
     });
   }
 
@@ -214,37 +264,18 @@ function createMapMarkers(task) {
 }
 
 // Håndtering af opgave aktivering
-function handleTaskActivation(task, area, btn, currentTaskIndex) {
-  map.addListener("mousemove", (e) => {
-    const pos = { lat: e.latLng.lat(), lng: e.latLng.lng() };
-    const distance = google.maps.geometry.spherical.computeDistanceBetween(
-      new google.maps.LatLng(pos.lat, pos.lng),
-      new google.maps.LatLng(task.geo.lat, task.geo.lng)
-    );
-
-    if (distance < task.geo.radius) {
-      task.isActive = true;
-      task.element.style.display = "block";
-      btn.disabled = false;
-
-      area.setOptions({ fillColor: "#597E50", strokeColor: "#597E50" });
-      introTxtScreen("taskActive");
-    } else {
-      task.isActive = false;
-      if (!task.isLocked) {
-        task.element.style.display = "none";
-        area.setOptions({ fillColor: "#FF0004", strokeColor: "#FF0004" });
-      }
-    }
-  });
-
+function handleTaskActivation(task, area) {
   area.addListener("click", () => {
     task.isActive = true;
     task.isLocked = true;
-    introTxtScreen("taskActive");
+    task.element.style.display = "block";
 
-    area.setOptions({ fillColor: "#597E50", strokeColor: "#597E50" });
-    currentTaskIndex++;
+    task.area.setOptions({
+      fillColor: "#597E50",
+      strokeColor: "#597E50",
+    });
+
+    introTxtScreen("taskActive");
   });
 }
 
@@ -302,6 +333,5 @@ async function loadScenarios() {
 document.addEventListener("DOMContentLoaded", () => {
   initMap();
   new User("login", "username");
-  activatePlayerMarker();
   introTxtScreen("loggedOut");
 });

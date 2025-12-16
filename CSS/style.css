@@ -82,6 +82,34 @@ body .main #sidebar #introTxt {
   line-height: 27px;
   letter-spacing: -0.5px;
 }
+body .main #sidebar .opgaveBox {
+  border: 3px solid #8d1b3d;
+  padding: 1rem 1rem;
+  margin: 15px 0px;
+}
+body .main #sidebar .opgaveBox fieldset {
+  border: none;
+}
+body .main #sidebar button {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: #fdfdfd;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 27px;
+  letter-spacing: -0.5px;
+  background-color: #8d1b3d;
+  padding: 12px;
+  padding: 5px 10px;
+  margin-top: 15px;
+}
+body .main #sidebar button:hover {
+  background-color: #fdfdfd;
+  color: #080808;
+  border: 2px solid white;
+}
+body .main #sidebar button:hover {
+  border: 2px solid #8d1b3d !important;
+}
 body .main #content {
   width: auto;
   height: 60vh;
