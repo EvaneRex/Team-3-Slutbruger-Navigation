@@ -80,12 +80,11 @@ class User {
         this.#username = username;
         this.updateHeader();
         this.hideLogin();
-        introTxtScreen("loggedIn", this.username);
+        introTxtScreen("loggedIn", this.#username);
         localStorage.setItem("username", username);
         document.getElementById("map").classList.remove("blur");
         this.logoutBtn.style.display = "inline";
 
-        introTxtScreen("loggedIn");
         await loadScenarios();
         setupMouseMove();
       }
@@ -208,18 +207,23 @@ function showTaskUI(task, locked) {
 
 // Henter gruppe 3 API
 async function fetchScenariosFromAPI() {
-  const res = await fetch(
-    "https://api.jsonbin.io/v3/b/6939291ad0ea881f401efd5e",
-    {
-      headers: {
-        "x-access-key":
-          "$2a$10$rbxsXvTusL7oeoOTyUmf2.B7q7wRIbEty5zzAsWpoJMElkv1REKNS",
-      },
-    }
-  );
-
-  const data = await res.json();
-  return data.record.scenarios;
+  try {
+    const res = await fetch(
+      "https://api.jsonbin.io/v3/b/6939291ad0ea881f401efd5e",
+      {
+        headers: {
+          "x-access-key":
+            "$2a$10$rbxsXvTusL7oeoOTyUmf2.B7q7wRIbEty5zzAsWpoJMElkv1REKNS",
+        },
+      }
+    );
+    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+    const data = await res.json();
+    return data.record.scenarios;
+  } catch (err) {
+    console.error("Fejl ved hentning af scenarier:", err);
+    return [];
+  }
 }
 
 // Load scenarier
@@ -251,6 +255,7 @@ async function loadScenarios() {
 }
 
 // Mus funktion
+// Her der er radius problemer
 function setupMouseMove() {
   if (mouseMoveListener) return;
 
