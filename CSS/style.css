@@ -83,12 +83,12 @@ body .main #sidebar #introTxt {
   line-height: 27px;
   letter-spacing: -0.5px;
 }
-body .main #sidebar .opgaveBox {
+body .main #sidebar #activeTaskBox {
   border: 3px solid #8d1b3d;
   padding: 1rem 1rem;
   margin: 15px 0px;
 }
-body .main #sidebar .opgaveBox h2 {
+body .main #sidebar #activeTaskBox h2 {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: #080808;
   font-weight: 700;
@@ -96,7 +96,7 @@ body .main #sidebar .opgaveBox h2 {
   line-height: 27px;
   letter-spacing: -1.2px;
 }
-body .main #sidebar .opgaveBox p {
+body .main #sidebar #activeTaskBox p {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: #080808;
   font-weight: 400;
@@ -105,22 +105,39 @@ body .main #sidebar .opgaveBox p {
   letter-spacing: -0.5px;
   margin: 10px 0px;
 }
-body .main #sidebar .opgaveBox fieldset {
-  border: none;
+body .main #sidebar #activeTaskBox #taskOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 8px 0;
 }
-body .main #sidebar .opgaveBox fieldset div {
+body .main #sidebar #activeTaskBox #taskOptions .checkbox {
   display: flex;
   align-items: center;
-  margin: 8px 0px;
+  gap: 8px;
+  cursor: pointer;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: #080808;
   font-weight: 400;
   font-size: 17px;
   line-height: 27px;
   letter-spacing: -0.5px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }
-body .main #sidebar .opgaveBox fieldset div label {
-  margin-left: 5px;
+body .main #sidebar #activeTaskBox #taskOptions .checkbox input {
+  display: none;
+}
+body .main #sidebar #activeTaskBox #taskOptions .checkbox .checkmark {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #8d1b3d;
+  border-radius: 3px;
+  display: inline-block;
+}
+body .main #sidebar #activeTaskBox #taskOptions .checkbox input:checked + .checkmark {
+  background-color: #8d1b3d;
 }
 body .main #sidebar button {
   font-family: Verdana, Geneva, Tahoma, sans-serif;

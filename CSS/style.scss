@@ -67,7 +67,7 @@ body {
       #introTxt {
         @include partial.txt;
       }
-      .opgaveBox {
+      #activeTaskBox {
         border: 3px solid partial.$HJV;
         padding: 1rem 1rem;
         margin: 15px 0px;
@@ -79,15 +79,34 @@ body {
           margin: 10px 0px;
         }
 
-        fieldset {
-          border: none;
-          div {
+        #taskOptions {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          margin: 8px 0;
+
+          .checkbox {
             display: flex;
             align-items: center;
-            margin: 8px 0px;
+            gap: 8px;
+            cursor: pointer;
             @include partial.txt;
-            label {
-              margin-left: 5px;
+            user-select: none;
+
+            input {
+              display: none;
+            }
+
+            .checkmark {
+              width: 16px;
+              height: 16px;
+              border: 2px solid partial.$HJV;
+              border-radius: 3px;
+              display: inline-block;
+            }
+
+            input:checked + .checkmark {
+              background-color: partial.$HJV;
             }
           }
         }

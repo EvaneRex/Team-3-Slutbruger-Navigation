@@ -31,26 +31,18 @@
         <p id="introTxt"></p>
 
         <!--Kassen med listen over opgaver -->
-        <div id="taskBox">
-          <h2></h2>
-        </div>
+        <div id="taskBox"></div>
 
         <!--Kassen hvor scenarie opgaverne er inde i-->
-        <div id="scenarioBox">
-          <h2></h2>
-          <p></p>
+        <div id="scenarioBox"></div>
+        <div id="activeTaskBox" style="display: none">
+          <h2 id="taskTitle"></h2>
+          <p id="taskDescription"></p>
+
+          <div id="taskOptions"></div>
+
+          <button id="nextTaskBtn" style="display: none">Næste</button>
         </div>
-          <div id="activeTaskBox" style="display:none;">
-            <h2 id="taskTitle"></h2>
-            <p id="taskDescription"></p>
-
-            <div id="taskOptions"></div>
-
-            <button id="nextTaskBtn" style="display:none;">
-              Næste
-            </button>
-          </div>
-
       </section>
 
       <section id="content">
