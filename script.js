@@ -5,11 +5,11 @@ let mouseMoveListener;
 
 // Indsætter kortet, og centrere det på dk, tilføjer playerMarker
 function initMap() {
-  const defaultCenter = { lat: 55.45, lng: 12.1 };
+  const defaultCenter = { lat: 55.8825, lng: 8.237 };
 
   map = new google.maps.Map(document.getElementById("map"), {
     center: defaultCenter,
-    zoom: 15,
+    zoom: 10,
   });
 
   playerMarker = new google.maps.Marker({
@@ -140,7 +140,7 @@ function introTxtScreen(state) {
     headingOne.textContent = "Udforsk";
     introTxt.innerHTML = `Udforsk kortet for at lokalisere yderligere opgaver i dit område.<br>Hvis der ikke fremgår aktive opgaver, returnér da til base.`;
   }
-  if (state === "task.isActive") {
+  if (state === "taskActive") {
     headingOne.textContent = "Scenarie";
     introTxt.style.display = "none";
   }
@@ -260,7 +260,8 @@ function createScenarioBox(scenario) {
   const fieldset = document.createElement("fieldset");
   scenarioBox.appendChild(fieldset);
 
-  const btn = document.getElementById("scenarioBtn");
+  // Opret scenario-knap her i JS
+  const btn = document.createElement("button");
   btn.textContent = "Næste";
   btn.disabled = true;
   scenarioBox.appendChild(btn);
@@ -268,7 +269,9 @@ function createScenarioBox(scenario) {
   let currentTaskIndex = 0;
   scenario.tasks.forEach((task) => {
     createTaskElements(task, fieldset);
-    const { marker, area } = createMapMarkers(task, btn);
+    const { marker, area } = createMapMarkers(task);
+    task.marker = marker;
+    task.area = area;
     handleTaskActivation(task, area, btn, currentTaskIndex);
   });
 
@@ -295,5 +298,8 @@ async function loadScenarios() {
 document.addEventListener("DOMContentLoaded", () => {
   initMap();
   new User("login", "username");
-  introTxtScreen("loggedOut");
+
+  activatePlayerMarker();
+  loadScenarios();
+  introTxtScreen("loggedIn");
 });
