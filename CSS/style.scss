@@ -111,14 +111,30 @@ body {
           }
         }
       }
+      #scenarioBox {
+        text-align: center;
+        margin-top: 20px;
 
-      .scenarioItem {
-        @include partial.btn;
-        padding: 5px 10px;
-        margin: 0 15px 0 15px;
-        
+        .scenarioItem {
+          display: block; // sikrer at hvert item står for sig
+          margin: 10px auto;
+          width: 100%;
+
+          @include partial.btn;
+
+          padding: 5px 10px;
+          border: 2px solid partial.$HJV;
+          transition: all 0.15s ease;
+
+          &:hover {
+            border-color: partial.$HJV;
+          }
+        }
+        .scenarioCompleted {
+          border: 2px solid partial.$HJV;
+          color: gray;
+        }
       }
-      
 
       button {
         @include partial.btn;
@@ -238,6 +254,32 @@ body {
         background-color: partial.$txt-light;
         #headingOne {
           @include partial.h1;
+        }
+
+        #scenarioBox {
+          text-align: center;
+          margin-top: 150px;
+
+          .scenarioItem {
+            display: block;
+            margin: 10px auto;
+            width: 100%;
+
+            @include partial.btn;
+
+            padding: 5px 10px;
+            border: 2px solid partial.$HJV;
+            transition: all 0.15s ease;
+
+            &:hover {
+              border-color: partial.$HJV;
+            }
+          }
+          .scenarioCompleted {
+            background-color: white;
+            border: 2px solid partial.$HJV;
+            color: gray;
+          }
         }
       }
     }
