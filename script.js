@@ -57,12 +57,11 @@ function initMap() {
 // Brugeradgang + sammenhæng med tekst
 // skal connectes med sidebaren, så den skifter når man er logget ind
 class User {
-  #username = "";
-
   constructor(loginFormId, headerUsernameId) {
     this.loginForm = document.getElementById(loginFormId);
     this.headerUsername = document.getElementById(headerUsernameId);
     this.logoutBtn = document.getElementById("logout");
+    this.username = "";
 
     this.checkLocalStorage();
     this.initLogin();
@@ -77,10 +76,10 @@ class User {
       const password = document.getElementById("password").value;
 
       if (username === "1" && password === "1") {
-        this.#username = username;
+        this.username = username;
         this.updateHeader();
         this.hideLogin();
-        introTxtScreen("loggedIn", this.#username);
+        introTxtScreen("loggedIn", this.username);
         localStorage.setItem("username", username);
         document.getElementById("map").classList.remove("blur");
         this.logoutBtn.style.display = "inline";
@@ -94,7 +93,7 @@ class User {
   checkLocalStorage() {
     const storedUser = localStorage.getItem("username");
     if (storedUser) {
-      this.#username = storedUser;
+      this.username = storedUser;
       this.updateHeader();
       this.hideLogin();
       this.logoutBtn.style.display = "inline";
@@ -105,7 +104,7 @@ class User {
   }
 
   updateHeader() {
-    this.headerUsername.textContent = this.#username;
+    this.headerUsername.textContent = this.username;
   }
 
   hideLogin() {
@@ -130,7 +129,7 @@ class User {
     localStorage.removeItem("username");
     introTxtScreen("loggedOut");
 
-    this.#username = "";
+    this.username = "";
     this.headerUsername.textContent = "";
     this.loginForm.style.display = "flex";
     this.logoutBtn.style.display = "none";
@@ -141,7 +140,7 @@ class User {
   }
 
   getUsername() {
-    return this.#username;
+    return this.username;
   }
 }
 
