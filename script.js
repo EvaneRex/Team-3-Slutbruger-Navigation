@@ -136,7 +136,8 @@ class User {
     this.logoutBtn.style.display = "none";
     const overlay = document.querySelector(".loginOverlay");
     if (overlay) overlay.style.display = "flex";
-    deactivatePlayerMarker();
+    const mapDiv = document.getElementById("map");
+    mapDiv.classList.add("blur");
   }
 
   getUsername() {
@@ -174,17 +175,11 @@ function introTxtScreen(state) {
 function showExploreUI() {
   document.getElementById("taskBox").style.display = "block";
   document.getElementById("activeTaskBox").style.display = "none";
-  if (!activeScenario && !lockedTask) {
-    document.getElementById("scenarioBox").style.display = "block";
-  } else {
-    document.getElementById("scenarioBox").style.display = "none";
-  }
 }
 
 function showTaskUI(task, locked) {
   document.getElementById("taskBox").style.display = "none";
   document.getElementById("activeTaskBox").style.display = "block";
-  document.getElementById("scenarioBox").style.display = "none";
 
   document.getElementById("taskTitle").textContent = task.title;
   document.getElementById("taskDescription").textContent = task.description;
@@ -258,7 +253,6 @@ async function loadScenarios() {
   });
 
   showExploreUI();
-  renderScenarioList();
 }
 
 // Mus funktion
@@ -268,8 +262,6 @@ function setupMouseMove() {
 
   mouseMoveListener = map.addListener("mousemove", (e) => {
     if (!localStorage.getItem("username")) return;
-
-    
 
     if (lockedTask) return;
 
