@@ -57,8 +57,6 @@ function initMap() {
 // Brugeradgang + sammenhæng med tekst
 // skal connectes med sidebaren, så den skifter når man er logget ind
 class User {
-  #username = "";
-
   constructor(loginFormId, headerUsernameId) {
     this.loginForm = document.getElementById(loginFormId);
     this.headerUsername = document.getElementById(headerUsernameId);
@@ -80,7 +78,7 @@ class User {
         this.#username = username;
         this.updateHeader();
         this.hideLogin();
-        introTxtScreen("loggedIn", this.#username);
+        introTxtScreen("loggedIn", this.username);
         localStorage.setItem("username", username);
         document.getElementById("map").classList.remove("blur");
         this.logoutBtn.style.display = "inline";
