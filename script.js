@@ -58,7 +58,7 @@ class User {
       const username = document.getElementById("usernameLogin").value;
       const password = document.getElementById("password").value;
 
-      if (username === "1" && password === "1") {
+      if (username === "slutbruger" && password === "1234") {
         this.username = username;
         this.updateHeader();
         this.hideLogin();
