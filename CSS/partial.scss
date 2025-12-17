@@ -27,7 +27,6 @@ $font: Verdana, Geneva, Tahoma, sans-serif;
   font-weight: 700;
   line-height: 54px;
   letter-spacing: -2px;
-  word-break: break-all;
 }
 
 @mixin h2 {
@@ -37,7 +36,7 @@ $font: Verdana, Geneva, Tahoma, sans-serif;
   font-size: 28px;
   line-height: 27px;
   letter-spacing: -1.2px;
-  word-break: break-all;
+  word-wrap: break-word;
 }
 
 @mixin txt($txtcolor: $txt-dark) {

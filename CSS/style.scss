@@ -147,6 +147,7 @@ body {
     }
 
     #content {
+      position: relative;
       width: auto;
       height: 60vh;
       display: flex;
@@ -172,16 +173,17 @@ body {
         align-items: center;
         z-index: 9999;
       }
-
       #login {
         display: flex;
         flex-direction: column;
+
         @include partial.txt;
         background-color: partial.$HJV;
         width: 70%;
         height: auto;
         color: partial.$txt-light;
         padding: 2rem 2rem;
+
         input {
           margin-bottom: 1.5rem;
           @include partial.txt;
@@ -201,7 +203,7 @@ body {
   }
 }
 
-@media screen and (min-width: 425px) and (max-width: 800px) {
+@media screen and (min-width: 600px) and (max-width: 800px) {
   body {
     header {
       a {
@@ -233,7 +235,7 @@ body {
     }
     .main {
       flex-direction: row;
-      height: 86vh;
+      height: 88.5vh;
 
       #content {
         position: relative;
@@ -242,6 +244,7 @@ body {
         #login {
           width: 60%;
           padding: 5rem 5rem;
+          border: none;
           button {
             width: 60%;
             align-self: center;
