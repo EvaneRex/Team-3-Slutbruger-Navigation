@@ -194,6 +194,14 @@ function showTaskUI(task, locked) {
     const cb = document.createElement("input");
     cb.type = "checkbox";
 
+    cb.addEventListener("change", () => {
+      if (cb.checked) {
+        opts.querySelectorAll("input[type='checkbox']").forEach((other) => {
+          if (other !== cb) other.checked = false;
+        });
+      }
+    });
+
     const checkmark = document.createElement("span");
     checkmark.classList.add("checkmark");
 
