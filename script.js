@@ -397,7 +397,6 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
   if (
     document.getElementById("nextTaskBtn").textContent === "Tilbage til kort"
   ) {
-    const completedScenario = activeScenario;
 
     showExploreUI();
     introTxtScreen("loggedIn");
@@ -413,12 +412,8 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
     activeScenario = null;
     activeTaskIndex = null;
     lockedTask = false;
-
-    renderScenarioList();
     return;
   }
-
-  let error = document.getElementById("taskError");
 
   const hasCheckboxes = document.querySelector(
     "#taskOptions input[type='checkbox']"
