@@ -140,13 +140,11 @@ class User {
     const mapDiv = document.getElementById("map");
     mapDiv.classList.add("blur");
     document.getElementById("scenarioBox").style.display = "none";
-
   }
 
   getUsername() {
     return this.username;
   }
-  
 }
 
 // Vores tekst i sidebar
@@ -188,13 +186,16 @@ function renderScenarioList() {
   const box = document.getElementById("scenarioBox");
   box.innerHTML = "";
 
+  const sHeading = document.createElement("h2");
+  sHeading.textContent = "Opgaver";
+  box.appendChild(sHeading);
+
   allScenarios.forEach((scenario, index) => {
     const item = document.createElement("div");
     item.classList.add("scenarioItem");
 
     // titel fra JSON (fallback hvis ikke findes)
-    item.textContent =
-      scenario.title || `Scenarie ${index + 1}`;
+    item.textContent = scenario.title || `Scenarie ${index + 1}`;
 
     if (scenario.completed) {
       //completed
@@ -209,7 +210,6 @@ function renderScenarioList() {
 }
 
 function showTaskUI(task, locked) {
-
   //skjuler scenarielisten
   document.getElementById("scenarioBox").style.display = "none";
 
@@ -372,21 +372,22 @@ function setupMouseMove() {
 
 //Sidste boks med afslutning + error message hvis ingen valg
 document.getElementById("nextTaskBtn").addEventListener("click", () => {
-  if (document.getElementById("nextTaskBtn").textContent === "Tilbage til kort") {
-    
+  if (
+    document.getElementById("nextTaskBtn").textContent === "Tilbage til kort"
+  ) {
     const completedScenario = activeScenario;
 
     showExploreUI();
     introTxtScreen("loggedIn");
-  
+
     // rydder indhold
     document.getElementById("taskOptions").innerHTML = "";
     document.getElementById("taskTitle").textContent = "";
     document.getElementById("taskDescription").textContent = "";
-  
-    // resetter knaptekst 
+
+    // resetter knaptekst
     document.getElementById("nextTaskBtn").textContent = "Næste";
-  
+
     activeScenario = null;
     activeTaskIndex = null;
     lockedTask = false;
@@ -394,29 +395,27 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
     renderScenarioList();
     return;
   }
-  
-  
-  let error = document.getElementById("taskError");
 
+  let error = document.getElementById("taskError");
 
   const hasCheckboxes = document.querySelector(
     "#taskOptions input[type='checkbox']"
   );
-  
+
   if (hasCheckboxes) {
     const checked = document.querySelector(
       "#taskOptions input[type='checkbox']:checked"
     );
-  
+
     if (!checked) {
       let error = document.getElementById("taskError");
-  
+
       if (!error) {
         error = document.createElement("p");
         error.id = "taskError";
         error.textContent = "Du skal vælge én mulighed for at fortsætte.";
         error.style.marginTop = "10px";
-  
+
         document.getElementById("activeTaskBox").appendChild(error);
       }
       return;

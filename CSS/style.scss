@@ -114,14 +114,16 @@ body {
       #scenarioBox {
         text-align: center;
         margin-top: 20px;
-
+        h2 {
+          @include partial.h2;
+          text-align: left;
+        }
         .scenarioItem {
           display: block; // sikrer at hvert item står for sig
           margin: 10px auto;
           width: 100%;
 
           @include partial.btn;
-
 
           padding: 5px 10px;
           border: 2px solid partial.$HJV;
@@ -136,9 +138,7 @@ body {
           border: 2px solid partial.$HJV;
           color: gray;
           background-color: white;
-
         }
-        
       }
 
       button {
