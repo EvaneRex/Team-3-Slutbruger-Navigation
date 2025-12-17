@@ -174,11 +174,17 @@ function introTxtScreen(state) {
 function showExploreUI() {
   document.getElementById("taskBox").style.display = "block";
   document.getElementById("activeTaskBox").style.display = "none";
+  if (!activeScenario && !lockedTask) {
+    document.getElementById("scenarioBox").style.display = "block";
+  } else {
+    document.getElementById("scenarioBox").style.display = "none";
+  }
 }
 
 function showTaskUI(task, locked) {
   document.getElementById("taskBox").style.display = "none";
   document.getElementById("activeTaskBox").style.display = "block";
+  document.getElementById("scenarioBox").style.display = "none";
 
   document.getElementById("taskTitle").textContent = task.title;
   document.getElementById("taskDescription").textContent = task.description;
@@ -205,7 +211,7 @@ function showTaskUI(task, locked) {
     : "none";
 }
 
-// Henter gruppe 3 API
+// Henter gruppe 4 API
 async function fetchScenariosFromAPI() {
   try {
     const res = await fetch(
@@ -252,6 +258,7 @@ async function loadScenarios() {
   });
 
   showExploreUI();
+  renderScenarioList();
 }
 
 // Mus funktion
