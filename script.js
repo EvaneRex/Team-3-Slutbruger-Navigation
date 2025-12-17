@@ -86,6 +86,8 @@ class User {
 
         await loadScenarios();
         setupMouseMove();
+      } else {
+        alert("Forkert brugernavn eller adgangskode");
       }
     });
   }
