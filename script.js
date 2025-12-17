@@ -144,7 +144,7 @@ class User {
     allScenarios.forEach((scenario) => {
       scenario.completed = false;
     });
-    
+
     // ryd scenarie-listen visuelt
     const scenarioBox = document.getElementById("scenarioBox");
     if (scenarioBox) {
@@ -156,8 +156,6 @@ class User {
   getUsername() {
     return this.username;
   }
-  
-  
 }
 
 // Vores tekst i sidebar
@@ -217,7 +215,15 @@ function renderScenarioList() {
       // aktiv
       item.classList.add("scenarioActive");
     }
-
+    item.addEventListener("click", () => {
+      if (scenario.tasks && scenario.tasks.length > 0) {
+        const firstTask = scenario.tasks[0];
+        if (firstTask.marker) {
+          map.setCenter(firstTask.marker.getPosition());
+          map.setZoom(18);
+        }
+      }
+    });
     box.appendChild(item);
   });
 }
@@ -418,8 +424,6 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
     return;
   }
 
-  let error = document.getElementById("taskError");
-
   const hasCheckboxes = document.querySelector(
     "#taskOptions input[type='checkbox']"
   );
@@ -457,6 +461,12 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
     next.marker.setMap(map);
     next.circle.setMap(map);
 
+    // næste opgave bliver centeret
+    if (next.marker) {
+      map.setCenter(next.marker.getPosition());
+      map.setZoom(15);
+    }
+
     lockedTask = false;
     showExploreUI();
     introTxtScreen("loggedIn");
@@ -469,13 +479,12 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
     document.getElementById("nextTaskBtn").textContent = "Tilbage til kort";
 
     scenario.completed = true;
+
     let completedScenarios =
-    JSON.parse(sessionStorage.getItem("completedScenarios")) || [];
-
-      if (!completedScenarios.includes(scenario.title)) {
-        completedScenarios.push(scenario.title);
-      }
-
+      JSON.parse(sessionStorage.getItem("completedScenarios")) || [];
+    if (!completedScenarios.includes(scenario.title)) {
+      completedScenarios.push(scenario.title);
+    }
     sessionStorage.setItem(
       "completedScenarios",
       JSON.stringify(completedScenarios)
