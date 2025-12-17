@@ -122,6 +122,7 @@ body {
 
           @include partial.btn;
 
+
           padding: 5px 10px;
           border: 2px solid partial.$HJV;
           transition: all 0.15s ease;
@@ -130,10 +131,14 @@ body {
             border-color: partial.$HJV;
           }
         }
+
         .scenarioCompleted {
           border: 2px solid partial.$HJV;
           color: gray;
+          background-color: white;
+
         }
+        
       }
 
       button {
@@ -279,6 +284,11 @@ body {
             background-color: white;
             border: 2px solid partial.$HJV;
             color: gray;
+          }
+          .scenarioCompleted {
+            border: 2px solid partial.$HJV;
+            color: gray;
+            background-color: white;
           }
         }
       }

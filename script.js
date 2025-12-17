@@ -373,6 +373,9 @@ function setupMouseMove() {
 //Sidste boks med afslutning + error message hvis ingen valg
 document.getElementById("nextTaskBtn").addEventListener("click", () => {
   if (document.getElementById("nextTaskBtn").textContent === "Tilbage til kort") {
+    
+    const completedScenario = activeScenario;
+
     showExploreUI();
     introTxtScreen("loggedIn");
   
@@ -386,14 +389,9 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
   
     activeScenario = null;
     activeTaskIndex = null;
-
-    if (activeScenario) {
-      activeScenario.completed = true;
-    }
+    lockedTask = false;
 
     renderScenarioList();
-    lockedTask = false;
-    
     return;
   }
   
@@ -448,6 +446,8 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
     document.getElementById("taskOptions").innerHTML =
       '<input type="text" placeholder="Kommentar">';
     document.getElementById("nextTaskBtn").textContent = "Tilbage til kort";
+
+    scenario.completed = true;
 
     lockedTask = false;
   }
