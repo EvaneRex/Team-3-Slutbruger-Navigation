@@ -139,11 +139,14 @@ class User {
     if (overlay) overlay.style.display = "flex";
     const mapDiv = document.getElementById("map");
     mapDiv.classList.add("blur");
+    document.getElementById("scenarioBox").style.display = "none";
+
   }
 
   getUsername() {
     return this.username;
   }
+  
 }
 
 // Vores tekst i sidebar
@@ -234,8 +237,6 @@ function showTaskUI(task, locked) {
           if (other !== cb) other.checked = false;
         });
       }
-      optionSelected = cb.checked;
-
       const errorMsg = document.getElementById("taskError");
       if (errorMsg) errorMsg.remove();
     });
@@ -385,10 +386,14 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
   
     activeScenario = null;
     activeTaskIndex = null;
-    scenario.completed = true;
+
+    if (activeScenario) {
+      activeScenario.completed = true;
+    }
+
     renderScenarioList();
     lockedTask = false;
-  
+    
     return;
   }
   
