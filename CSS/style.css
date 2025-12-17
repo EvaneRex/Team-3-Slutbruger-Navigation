@@ -153,11 +153,13 @@ body .main #sidebar #scenarioBox h2 {
   letter-spacing: -1.2px;
   word-wrap: break-word;
   text-align: left;
+  margin-bottom: 20px;
 }
 body .main #sidebar #scenarioBox .scenarioItem {
   display: block;
   margin: 10px auto;
   width: 100%;
+  cursor: pointer;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: #fdfdfd;
   font-weight: 400;
@@ -182,6 +184,7 @@ body .main #sidebar #scenarioBox .scenarioCompleted {
   border: 2px solid #8d1b3d;
   color: gray;
   background-color: white;
+  cursor: pointer;
 }
 body .main #sidebar button {
   font-family: Verdana, Geneva, Tahoma, sans-serif;

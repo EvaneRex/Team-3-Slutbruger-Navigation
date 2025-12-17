@@ -1,14 +1,15 @@
-// Globals
+// #region Globals
 let map;
 let mouseMoveListener;
 let allScenarios = [];
 let activeScenario = null;
 let activeTaskIndex = null;
 let lockedTask = false;
-let playerMarker;
 let mapInitialized = false;
 let scenarioInProgress = false;
-// style for lokationsmarkørerne
+// #endregion
+
+// #region style for lokationsmarkørerne
 function getTaskIcon(environment) {
   return {
     url: environment === "land" ? "img/haerpin.svg" : "img/soepin.svg",
@@ -16,8 +17,9 @@ function getTaskIcon(environment) {
     anchor: new google.maps.Point(24, 48), // justere den til midten af opgaven
   };
 }
+// #endregion 
 
-//Google maps
+// #region Google maps
 function initMap() {
   if (mapInitialized) return; // forhindrer dobbelt init
   mapInitialized = true;
@@ -28,34 +30,15 @@ function initMap() {
     mapTypeId: "hybrid",
   });
 
-  playerMarker = new google.maps.Marker({
-    position: map.getCenter(),
-    map,
-    visible: false,
-  });
+  // playerMarker = new google.maps.Marker({
+  //   position: map.getCenter(),
+  //   map,
+  //   visible: false,
+  // });
 }
+// #endregion
 
-// Håndtering af playerMarker aktiveret/deaktiveret
-// function activatePlayerMarker() {
-//   if (mouseMoveListener) return;
-
-//   const mapDiv = document.getElementById("map");
-//   mapDiv.classList.remove("blur");
-// }
-
-// function deactivatePlayerMarker() {
-//   if (mouseMoveListener) {
-//     google.maps.event.removeListener(mouseMoveListener);
-//     mouseMoveListener = null;
-//   }
-//   if (playerMarker) playerMarker.setVisible(false);
-
-//   const mapDiv = document.getElementById("map");
-//   mapDiv.classList.add("blur");
-// }
-
-// Brugeradgang + sammenhæng med tekst
-// skal connectes med sidebaren, så den skifter når man er logget ind
+// #region Login - Logud 
 class User {
   constructor(loginFormId, headerUsernameId) {
     this.loginForm = document.getElementById(loginFormId);
@@ -113,10 +96,6 @@ class User {
     this.loginForm.style.display = "none";
     const overlay = document.querySelector(".loginOverlay");
     if (overlay) overlay.style.display = "none";
-
-    //loadScenarios();
-
-    //introTxtScreen("loggedIn");
   }
 
   initLogout() {
@@ -157,8 +136,9 @@ class User {
     return this.username;
   }
 }
+// #endregion
 
-// Vores tekst i sidebar
+// #region Vores tekst i sidebar
 const headingOne = document.getElementById("headingOne");
 const introTxt = document.getElementById("introTxt");
 
@@ -183,8 +163,9 @@ function introTxtScreen(state) {
     introTxt.style.display = "none";
   }
 }
+// #endregion
 
-// UI funktioner sættes ind
+// #region UI funktioner sættes ind
 function showExploreUI() {
   document.getElementById("taskBox").style.display = "block";
   document.getElementById("activeTaskBox").style.display = "none";
@@ -192,7 +173,6 @@ function showExploreUI() {
 
   renderScenarioList();
 }
-
 function renderScenarioList() {
   const box = document.getElementById("scenarioBox");
   box.innerHTML = "";
@@ -227,7 +207,6 @@ function renderScenarioList() {
     box.appendChild(item);
   });
 }
-
 function showTaskUI(task, locked) {
   //skjuler scenarielisten
   document.getElementById("scenarioBox").style.display = "none";
@@ -271,6 +250,13 @@ function showTaskUI(task, locked) {
     ? "block"
     : "none";
 }
+function clearTaskUI() {
+  document.getElementById("activeTaskBox").style.display = "none";
+  document.getElementById("taskTitle").textContent = "";
+  document.getElementById("taskDescription").textContent = "";
+  document.getElementById("taskOptions").innerHTML = "";
+  document.getElementById("nextTaskBtn").style.display = "none";
+}
 
 // Henter gruppe 4 API
 async function fetchScenariosFromAPI() {
@@ -292,8 +278,9 @@ async function fetchScenariosFromAPI() {
     return [];
   }
 }
+// #endregion
 
-// Load scenarier
+// #region Load scenarier
 async function loadScenarios() {
   allScenarios = await fetchScenariosFromAPI();
 
@@ -329,17 +316,16 @@ async function loadScenarios() {
   });
 
   showExploreUI();
-  renderScenarioList();
 }
+// #endregion
 
-// Mus funktion
+// #region Mus funktion + radius
 // Her der er radius problemer
 function setupMouseMove() {
   if (mouseMoveListener) return;
 
   mouseMoveListener = map.addListener("mousemove", (e) => {
     if (!localStorage.getItem("username")) return;
-
     if (lockedTask) return;
 
     let insideAny = false;
@@ -348,10 +334,11 @@ function setupMouseMove() {
       scenario.tasks.forEach((task) => {
         if (!task.circle || !task.circle.getMap()) return;
 
-        const distance = google.maps.geometry.spherical.computeDistanceBetween(
-          e.latLng,
-          new google.maps.LatLng(task.geo.lat, task.geo.lng)
-        );
+        const distance =
+          google.maps.geometry.spherical.computeDistanceBetween(
+            e.latLng,
+            new google.maps.LatLng(task.geo.lat, task.geo.lng)
+          );
 
         const effectiveRadius = task.geo.radius * 10;
 
@@ -359,15 +346,15 @@ function setupMouseMove() {
           insideAny = true;
 
           activeScenario = scenario;
-          activeTaskIndex = task.index;
+          activeTaskIndex =task.index;
 
-          task.circle.setOptions({
-            fillColor: "#597E50",
-            strokeColor: "#597E50",
-          });
+            task.circle.setOptions({
+              fillColor: "#597E50",
+              strokeColor: "#597E50",
+            });
 
-          showTaskUI(task, false);
-          introTxtScreen("task");
+            showTaskUI(task, false);
+            introTxtScreen("task");
         } else {
           task.circle.setOptions({
             fillColor: "#FF0004",
@@ -377,29 +364,32 @@ function setupMouseMove() {
       });
     });
 
-    // ikke i nogen radius → tilbage til udforsk
-    if (!insideAny && !lockedTask && !scenarioInProgress) {
+    //fald tilbage til udforsk
+    if (!insideAny) {
       activeScenario = null;
       activeTaskIndex = null;
 
+      clearTaskUI();
       showExploreUI();
       introTxtScreen("loggedIn");
     }
   });
 
-  // CLICK = lås
+  // Click = lås scenarie
   map.addListener("click", () => {
     if (!activeScenario || activeTaskIndex === null) return;
     if (lockedTask) return;
 
-    scenarioInProgress = true;
     lockedTask = true;
+    scenarioInProgress = true;
 
     showTaskUI(activeScenario.tasks[activeTaskIndex], true);
+    introTxtScreen("task");
   });
 }
+// #endregion
 
-//Sidste boks med afslutning + error message hvis ingen valg
+// #region Sidste boks med afslutning + error message hvis ingen valg
 document.getElementById("nextTaskBtn").addEventListener("click", () => {
   if (
     document.getElementById("nextTaskBtn").textContent === "Tilbage til kort"
@@ -407,11 +397,7 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
 
     showExploreUI();
     introTxtScreen("loggedIn");
-
-    // rydder indhold
-    document.getElementById("taskOptions").innerHTML = "";
-    document.getElementById("taskTitle").textContent = "";
-    document.getElementById("taskDescription").textContent = "";
+    clearTaskUI(); // rydder indhold
 
     // resetter knaptekst
     document.getElementById("nextTaskBtn").textContent = "Næste";
@@ -456,17 +442,21 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
 
   if (scenario.tasks[activeTaskIndex]) {
     const next = scenario.tasks[activeTaskIndex];
+
     next.marker.setMap(map);
     next.circle.setMap(map);
 
     // næste opgave bliver centeret
-    if (next.marker) {
-      map.setCenter(next.marker.getPosition());
-      map.setZoom(15);
-    }
+    map.setCenter(next.marker.getPosition());
+    map.setZoom(15);
 
-    showTaskUI(next, true);
+    lockedTask = false;          
+    activeScenario = null;    
+    activeTaskIndex = null;
+
+    clearTaskUI();
     introTxtScreen("task");
+    
   } else {
     document.getElementById("taskTitle").textContent = "Scenarie afsluttet";
     document.getElementById("taskDescription").textContent =
@@ -489,10 +479,12 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
     lockedTask = false;
   }
 });
+// #endregion
 
-// Opstart
+// #region Opstart
 document.addEventListener("DOMContentLoaded", () => {
   initMap();
   new User("login", "username");
   introTxtScreen("loggedOut");
 });
+// #endregion 
