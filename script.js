@@ -7,7 +7,7 @@ let activeTaskIndex = null;
 let lockedTask = false;
 let playerMarker;
 let mapInitialized = false;
-
+let scenarioInProgress = false;
 // style for lokationsmarkørerne
 function getTaskIcon(environment) {
   return {
@@ -378,7 +378,7 @@ function setupMouseMove() {
     });
 
     // ikke i nogen radius → tilbage til udforsk
-    if (!insideAny && !lockedTask) {
+    if (!insideAny && !lockedTask && !scenarioInProgress) {
       activeScenario = null;
       activeTaskIndex = null;
 
@@ -392,6 +392,7 @@ function setupMouseMove() {
     if (!activeScenario || activeTaskIndex === null) return;
     if (lockedTask) return;
 
+    scenarioInProgress = true;
     lockedTask = true;
 
     showTaskUI(activeScenario.tasks[activeTaskIndex], true);
@@ -464,9 +465,8 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
       map.setZoom(15);
     }
 
-    lockedTask = false;
-    showExploreUI();
-    introTxtScreen("loggedIn");
+    showTaskUI(next, true);
+    introTxtScreen("task");
   } else {
     document.getElementById("taskTitle").textContent = "Scenarie afsluttet";
     document.getElementById("taskDescription").textContent =
@@ -474,8 +474,6 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
     document.getElementById("taskOptions").innerHTML =
       '<input type="text" placeholder="Kommentar">';
     document.getElementById("nextTaskBtn").textContent = "Tilbage til kort";
-
-    scenario.completed = true;
 
     let completedScenarios =
       JSON.parse(sessionStorage.getItem("completedScenarios")) || [];
@@ -486,7 +484,8 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
       "completedScenarios",
       JSON.stringify(completedScenarios)
     );
-
+    scenario.completed = true;
+    scenarioInProgress = false;
     lockedTask = false;
   }
 });
