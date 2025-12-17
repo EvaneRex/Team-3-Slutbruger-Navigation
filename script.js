@@ -17,7 +17,7 @@ function getTaskIcon(environment) {
     anchor: new google.maps.Point(24, 48), // justere den til midten af opgaven
   };
 }
-// #endregion 
+// #endregion
 
 // #region Google maps
 function initMap() {
@@ -38,7 +38,7 @@ function initMap() {
 }
 // #endregion
 
-// #region Login - Logud 
+// #region Login - Logud
 class User {
   constructor(loginFormId, headerUsernameId) {
     this.loginForm = document.getElementById(loginFormId);
@@ -335,11 +335,10 @@ function setupMouseMove() {
       scenario.tasks.forEach((task) => {
         if (!task.circle || !task.circle.getMap()) return;
 
-        const distance =
-          google.maps.geometry.spherical.computeDistanceBetween(
-            e.latLng,
-            new google.maps.LatLng(task.geo.lat, task.geo.lng)
-          );
+        const distance = google.maps.geometry.spherical.computeDistanceBetween(
+          e.latLng,
+          new google.maps.LatLng(task.geo.lat, task.geo.lng)
+        );
 
         const effectiveRadius = task.geo.radius * 1.5;
 
@@ -347,15 +346,15 @@ function setupMouseMove() {
           insideAny = true;
 
           activeScenario = scenario;
-          activeTaskIndex =task.index;
+          activeTaskIndex = task.index;
 
-            task.circle.setOptions({
-              fillColor: "#597E50",
-              strokeColor: "#597E50",
-            });
+          task.circle.setOptions({
+            fillColor: "#597E50",
+            strokeColor: "#597E50",
+          });
 
-            showTaskUI(task, false);
-            introTxtScreen("task");
+          showTaskUI(task, false);
+          introTxtScreen("task");
         } else {
           task.circle.setOptions({
             fillColor: "#FF0004",
@@ -395,7 +394,6 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
   if (
     document.getElementById("nextTaskBtn").textContent === "Tilbage til kort"
   ) {
-
     scenarioInProgress = false;
 
     activeScenario = null;
@@ -453,13 +451,12 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
     map.setCenter(next.marker.getPosition());
     map.setZoom(15);
 
-    lockedTask = false;          
-    activeScenario = null;    
+    lockedTask = false;
+    activeScenario = null;
     activeTaskIndex = null;
 
     clearTaskUI();
     introTxtScreen("task");
-    
   } else {
     document.getElementById("taskTitle").textContent = "Scenarie afsluttet";
     document.getElementById("taskDescription").textContent =
@@ -490,4 +487,4 @@ document.addEventListener("DOMContentLoaded", () => {
   new User("login", "username");
   introTxtScreen("loggedOut");
 });
-// #endregion 
+// #endregion

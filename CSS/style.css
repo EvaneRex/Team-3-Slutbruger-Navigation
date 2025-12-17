@@ -7,11 +7,13 @@
 body {
   height: 100%;
 }
+
 body header {
   background-color: #fdfdfd;
   width: 100%;
   height: auto;
 }
+
 body header div {
   background-color: #8d1b3d;
   width: 100%;
@@ -20,6 +22,7 @@ body header div {
   justify-content: flex-end;
   align-items: center;
 }
+
 body header div p {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: #080808;
@@ -30,6 +33,7 @@ body header div p {
   color: #fdfdfd;
   padding: 5px 15px;
 }
+
 body header div #logout {
   display: none;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -42,23 +46,28 @@ body header div #logout {
   text-decoration: underline;
   margin-right: 10px;
 }
+
 body header a {
   display: flex;
   align-items: center;
 }
+
 body header a .logoMobile {
   width: 68px;
   height: auto;
   padding: 15px;
 }
+
 body header a .logoDesk {
   display: none;
 }
+
 body .main {
   background-color: #fdfdfd;
   display: flex;
   flex-direction: column-reverse;
 }
+
 body .main #sidebar {
   height: 100%;
   width: 100%;
@@ -66,6 +75,7 @@ body .main #sidebar {
   box-shadow: 0px 4px 4px rgba(63, 91, 88, 0.1) inset;
   padding: 1.2rem 1.2rem;
 }
+
 body .main #sidebar #headingOne {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: #080808;
@@ -75,6 +85,7 @@ body .main #sidebar #headingOne {
   letter-spacing: -2px;
   font-size: 38px;
 }
+
 body .main #sidebar #introTxt {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: #080808;
@@ -83,11 +94,13 @@ body .main #sidebar #introTxt {
   line-height: 27px;
   letter-spacing: -0.5px;
 }
+
 body .main #sidebar #activeTaskBox {
   border: 3px solid #8d1b3d;
   padding: 1rem 1rem;
   margin: 15px 0px;
 }
+
 body .main #sidebar #activeTaskBox h2 {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: #080808;
@@ -97,6 +110,7 @@ body .main #sidebar #activeTaskBox h2 {
   letter-spacing: -1.2px;
   word-wrap: break-word;
 }
+
 body .main #sidebar #activeTaskBox p {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: #080808;
@@ -106,12 +120,14 @@ body .main #sidebar #activeTaskBox p {
   letter-spacing: -0.5px;
   margin: 10px 0px;
 }
+
 body .main #sidebar #activeTaskBox #taskOptions {
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin: 8px 0;
 }
+
 body .main #sidebar #activeTaskBox #taskOptions .checkbox {
   display: flex;
   align-items: center;
@@ -124,12 +140,14 @@ body .main #sidebar #activeTaskBox #taskOptions .checkbox {
   line-height: 27px;
   letter-spacing: -0.5px;
   -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  user-select: none;
 }
+
 body .main #sidebar #activeTaskBox #taskOptions .checkbox input {
   display: none;
 }
+
 body .main #sidebar #activeTaskBox #taskOptions .checkbox .checkmark {
   width: 16px;
   height: 16px;
@@ -137,13 +155,16 @@ body .main #sidebar #activeTaskBox #taskOptions .checkbox .checkmark {
   border-radius: 3px;
   display: inline-block;
 }
-body .main #sidebar #activeTaskBox #taskOptions .checkbox input:checked + .checkmark {
+
+body .main #sidebar #activeTaskBox #taskOptions .checkbox input:checked+.checkmark {
   background-color: #8d1b3d;
 }
+
 body .main #sidebar #scenarioBox {
   text-align: center;
   margin-top: 20px;
 }
+
 body .main #sidebar #scenarioBox h2 {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: #080808;
@@ -155,6 +176,7 @@ body .main #sidebar #scenarioBox h2 {
   text-align: left;
   margin-bottom: 20px;
 }
+
 body .main #sidebar #scenarioBox .scenarioItem {
   display: block;
   margin: 10px auto;
@@ -172,20 +194,24 @@ body .main #sidebar #scenarioBox .scenarioItem {
   border: 2px solid #8d1b3d;
   transition: all 0.15s ease;
 }
+
 body .main #sidebar #scenarioBox .scenarioItem:hover {
   background-color: #fdfdfd;
   color: #080808;
   border: 2px solid white;
 }
+
 body .main #sidebar #scenarioBox .scenarioItem:hover {
   border-color: #8d1b3d;
 }
+
 body .main #sidebar #scenarioBox .scenarioCompleted {
   border: 2px solid #8d1b3d;
   color: gray;
   background-color: white;
   cursor: pointer;
 }
+
 body .main #sidebar button {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: #fdfdfd;
@@ -198,14 +224,17 @@ body .main #sidebar button {
   padding: 5px 10px;
   margin-top: 15px;
 }
+
 body .main #sidebar button:hover {
   background-color: #fdfdfd;
   color: #080808;
   border: 2px solid white;
 }
+
 body .main #sidebar button:hover {
   border: 2px solid #8d1b3d !important;
 }
+
 body .main #content {
   position: relative;
   width: auto;
@@ -214,13 +243,16 @@ body .main #content {
   justify-content: center;
   align-items: center;
 }
+
 body .main #content #map {
   width: 100%;
   height: 100%;
 }
+
 body .main #content .blur {
   filter: blur(5px);
 }
+
 body .main #content .loginOverlay {
   position: absolute;
   top: 0;
@@ -232,6 +264,7 @@ body .main #content .loginOverlay {
   align-items: center;
   z-index: 9999;
 }
+
 body .main #content #login {
   display: flex;
   flex-direction: column;
@@ -247,6 +280,7 @@ body .main #content #login {
   color: #fdfdfd;
   padding: 2rem 2rem;
 }
+
 body .main #content #login input {
   margin-bottom: 1.5rem;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -256,6 +290,7 @@ body .main #content #login input {
   line-height: 27px;
   letter-spacing: -0.5px;
 }
+
 body .main #content #login button {
   margin-top: 1rem;
   padding: 12px;
@@ -270,6 +305,7 @@ body .main #content #login button {
   background-color: #fdfdfd;
   color: #080808;
 }
+
 body .main #content #login button:hover {
   background-color: #8d1b3d;
   color: #fdfdfd;
@@ -280,33 +316,40 @@ body .main #content #login button:hover {
   body header a .logoMobile {
     display: none;
   }
+
   body header a .logoDesk {
     display: block;
     padding: 10px 20px 20px;
   }
+
   body .main {
     flex-direction: row;
     height: 88.5vh;
   }
+
   body .main #content {
     position: relative;
     width: 70vw;
     height: 100%;
   }
+
   body .main #content #login {
     width: 60%;
     padding: 5rem 5rem;
     border: none;
   }
+
   body .main #content #login button {
     width: 60%;
     align-self: center;
   }
+
   body .main #sidebar {
     height: 100%;
     width: 30vw;
     background-color: #fdfdfd;
   }
+
   body .main #sidebar #headingOne {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     color: #080808;
@@ -315,9 +358,11 @@ body .main #content #login button:hover {
     line-height: 54px;
     letter-spacing: -2px;
   }
+
   body .main #sidebar #scenarioBox {
     text-align: center;
   }
+
   body .main #sidebar #scenarioBox .scenarioItem {
     display: block;
     margin: 10px auto;
@@ -334,22 +379,28 @@ body .main #content #login button:hover {
     border: 2px solid #8d1b3d;
     transition: all 0.15s ease;
   }
+
   body .main #sidebar #scenarioBox .scenarioItem:hover {
     background-color: #fdfdfd;
     color: #080808;
     border: 2px solid white;
   }
+
   body .main #sidebar #scenarioBox .scenarioItem:hover {
     border-color: #8d1b3d;
   }
+
   body .main #sidebar #scenarioBox .scenarioCompleted {
     background-color: white;
     border: 2px solid #8d1b3d;
     color: gray;
   }
+
   body .main #sidebar #scenarioBox .scenarioCompleted {
     border: 2px solid #8d1b3d;
     color: gray;
     background-color: white;
   }
-}/*# sourceMappingURL=style.css.map */
+}
+
+/*# sourceMappingURL=style.css.map */

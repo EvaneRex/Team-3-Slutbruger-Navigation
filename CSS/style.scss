@@ -114,7 +114,7 @@ body {
       #scenarioBox {
         text-align: center;
         margin-top: 20px;
-        
+
         h2 {
           @include partial.h2;
           text-align: left;
@@ -125,7 +125,6 @@ body {
           margin: 10px auto;
           width: 100%;
           cursor: pointer;
-          
 
           @include partial.btn;
 
