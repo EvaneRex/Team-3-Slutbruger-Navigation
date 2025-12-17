@@ -195,12 +195,18 @@ function showTaskUI(task, locked) {
     const cb = document.createElement("input");
     cb.type = "checkbox";
 
+    // Sætter maks på og tjekker om der er valg og fjerner error msg
+
     cb.addEventListener("change", () => {
       if (cb.checked) {
         opts.querySelectorAll("input[type='checkbox']").forEach((other) => {
           if (other !== cb) other.checked = false;
         });
       }
+      optionSelected = cb.checked;
+
+      const errorMsg = document.getElementById("taskError");
+      if (errorMsg) errorMsg.remove();
     });
 
     const checkmark = document.createElement("span");
@@ -330,8 +336,27 @@ function setupMouseMove() {
   });
 }
 
-//Sidste boks med afslutning
+//Sidste boks med afslutning + error message hvis ingen valg
 document.getElementById("nextTaskBtn").addEventListener("click", () => {
+  let error = document.getElementById("taskError");
+
+  const checked = document.querySelector(
+    "#taskOptions input[type='checkbox']:checked"
+  );
+
+  if (!checked) {
+    if (!error) {
+      error = document.createElement("p");
+      error.id = "taskError";
+      error.textContent = "Du skal vælge én mulighed for at fortsætte.";
+      error.style.color = "black";
+      error.style.marginTop = "10px";
+
+      document.getElementById("activeTaskBox").appendChild(error);
+    }
+    return;
+  }
+  
   const scenario = activeScenario;
   const task = scenario.tasks[activeTaskIndex];
 
