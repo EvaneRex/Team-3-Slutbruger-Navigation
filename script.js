@@ -129,6 +129,7 @@ class User {
 
   logout() {
     localStorage.removeItem("username");
+    sessionStorage.removeItem("completedScenarios");
     introTxtScreen("loggedOut");
 
     this.username = "";
@@ -140,12 +141,22 @@ class User {
     const mapDiv = document.getElementById("map");
     mapDiv.classList.add("blur");
     document.getElementById("scenarioBox").style.display = "none";
-
+    allScenarios.forEach((scenario) => {
+      scenario.completed = false;
+    });
+    
+    // ryd scenarie-listen visuelt
+    const scenarioBox = document.getElementById("scenarioBox");
+    if (scenarioBox) {
+      scenarioBox.innerHTML = "";
+      scenarioBox.style.display = "none";
+    }
   }
 
   getUsername() {
     return this.username;
   }
+  
   
 }
 
@@ -300,6 +311,15 @@ async function loadScenarios() {
     });
   });
 
+  const completedScenarios =
+    JSON.parse(sessionStorage.getItem("completedScenarios")) || [];
+
+  allScenarios.forEach((scenario) => {
+    if (completedScenarios.includes(scenario.title)) {
+      scenario.completed = true;
+    }
+  });
+
   showExploreUI();
   renderScenarioList();
 }
@@ -448,6 +468,17 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
     document.getElementById("nextTaskBtn").textContent = "Tilbage til kort";
 
     scenario.completed = true;
+    let completedScenarios =
+    JSON.parse(sessionStorage.getItem("completedScenarios")) || [];
+
+      if (!completedScenarios.includes(scenario.title)) {
+        completedScenarios.push(scenario.title);
+      }
+
+    sessionStorage.setItem(
+      "completedScenarios",
+      JSON.stringify(completedScenarios)
+    );
 
     lockedTask = false;
   }
