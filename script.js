@@ -419,7 +419,7 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
       return;
     }
   }
-  
+
   const scenario = activeScenario;
   const task = scenario.tasks[activeTaskIndex];
 
