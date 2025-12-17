@@ -176,9 +176,40 @@ function introTxtScreen(state) {
 function showExploreUI() {
   document.getElementById("taskBox").style.display = "block";
   document.getElementById("activeTaskBox").style.display = "none";
+  document.getElementById("scenarioBox").style.display = "block";
+
+  renderScenarioList();
+}
+
+function renderScenarioList() {
+  const box = document.getElementById("scenarioBox");
+  box.innerHTML = "";
+
+  allScenarios.forEach((scenario, index) => {
+    const item = document.createElement("div");
+    item.classList.add("scenarioItem");
+
+    // titel fra JSON (fallback hvis ikke findes)
+    item.textContent =
+      scenario.title || `Scenarie ${index + 1}`;
+
+    if (scenario.completed) {
+      //completed
+      item.classList.add("scenarioCompleted");
+    } else {
+      // aktiv
+      item.classList.add("scenarioActive");
+    }
+
+    box.appendChild(item);
+  });
 }
 
 function showTaskUI(task, locked) {
+
+  //skjuler scenarielisten
+  document.getElementById("scenarioBox").style.display = "none";
+
   document.getElementById("taskBox").style.display = "none";
   document.getElementById("activeTaskBox").style.display = "block";
 
@@ -247,6 +278,7 @@ async function loadScenarios() {
   allScenarios = await fetchScenariosFromAPI();
 
   allScenarios.forEach((scenario) => {
+    scenario.completed = false;
     scenario.tasks.forEach((task, i) => {
       task.index = i;
 
@@ -268,6 +300,7 @@ async function loadScenarios() {
   });
 
   showExploreUI();
+  renderScenarioList();
 }
 
 // Mus funktion
@@ -352,6 +385,8 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
   
     activeScenario = null;
     activeTaskIndex = null;
+    scenario.completed = true;
+    renderScenarioList();
     lockedTask = false;
   
     return;
