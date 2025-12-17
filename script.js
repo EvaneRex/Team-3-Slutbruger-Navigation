@@ -301,7 +301,8 @@ async function loadScenarios() {
         radius: task.geo.radius,
         fillColor: "#FF0004",
         strokeColor: "#FF0004",
-        fillOpacity: 0.3,
+        fillOpacity: 0.45,
+        clickable: true,
       });
     });
   });
@@ -340,7 +341,7 @@ function setupMouseMove() {
             new google.maps.LatLng(task.geo.lat, task.geo.lng)
           );
 
-        const effectiveRadius = task.geo.radius * 10;
+        const effectiveRadius = task.geo.radius * 1.5;
 
         if (distance <= effectiveRadius) {
           insideAny = true;
@@ -365,7 +366,7 @@ function setupMouseMove() {
     });
 
     //fald tilbage til udforsk
-    if (!insideAny) {
+    if (!insideAny && !scenarioInProgress) {
       activeScenario = null;
       activeTaskIndex = null;
 
@@ -395,16 +396,18 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
     document.getElementById("nextTaskBtn").textContent === "Tilbage til kort"
   ) {
 
-    showExploreUI();
-    introTxtScreen("loggedIn");
-    clearTaskUI(); // rydder indhold
-
-    // resetter knaptekst
-    document.getElementById("nextTaskBtn").textContent = "Næste";
+    scenarioInProgress = false;
 
     activeScenario = null;
     activeTaskIndex = null;
     lockedTask = false;
+
+    showExploreUI();
+    clearTaskUI(); // rydder indhold
+    introTxtScreen("loggedIn");
+
+    // resetter knaptekst
+    document.getElementById("nextTaskBtn").textContent = "Næste";
     return;
   }
 
