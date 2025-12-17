@@ -338,23 +338,51 @@ function setupMouseMove() {
 
 //Sidste boks med afslutning + error message hvis ingen valg
 document.getElementById("nextTaskBtn").addEventListener("click", () => {
+  if (document.getElementById("nextTaskBtn").textContent === "Tilbage til kort") {
+    showExploreUI();
+    introTxtScreen("loggedIn");
+  
+    // rydder indhold
+    document.getElementById("taskOptions").innerHTML = "";
+    document.getElementById("taskTitle").textContent = "";
+    document.getElementById("taskDescription").textContent = "";
+  
+    // resetter knaptekst 
+    document.getElementById("nextTaskBtn").textContent = "Næste";
+  
+    activeScenario = null;
+    activeTaskIndex = null;
+    lockedTask = false;
+  
+    return;
+  }
+  
+  
   let error = document.getElementById("taskError");
 
-  const checked = document.querySelector(
-    "#taskOptions input[type='checkbox']:checked"
+
+  const hasCheckboxes = document.querySelector(
+    "#taskOptions input[type='checkbox']"
   );
-
-  if (!checked) {
-    if (!error) {
-      error = document.createElement("p");
-      error.id = "taskError";
-      error.textContent = "Du skal vælge én mulighed for at fortsætte.";
-      error.style.color = "black";
-      error.style.marginTop = "10px";
-
-      document.getElementById("activeTaskBox").appendChild(error);
+  
+  if (hasCheckboxes) {
+    const checked = document.querySelector(
+      "#taskOptions input[type='checkbox']:checked"
+    );
+  
+    if (!checked) {
+      let error = document.getElementById("taskError");
+  
+      if (!error) {
+        error = document.createElement("p");
+        error.id = "taskError";
+        error.textContent = "Du skal vælge én mulighed for at fortsætte.";
+        error.style.marginTop = "10px";
+  
+        document.getElementById("activeTaskBox").appendChild(error);
+      }
+      return;
     }
-    return;
   }
 
   const scenario = activeScenario;
