@@ -269,9 +269,7 @@ function setupMouseMove() {
   mouseMoveListener = map.addListener("mousemove", (e) => {
     if (!localStorage.getItem("username")) return;
 
-    // 🧍 mus = spillerens position
-    playerMarker.setPosition(e.latLng);
-    playerMarker.setVisible(true);
+    
 
     if (lockedTask) return;
 
