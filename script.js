@@ -483,7 +483,7 @@ document.getElementById("nextTaskBtn").addEventListener("click", () => {
 
 // #region Opstart
 document.addEventListener("DOMContentLoaded", () => {
-  initMap();
+  initMap(); // lader til at skabe problemer på live-siden (hvor den er udkommenteret for at det virker) men skal være der i udviklingsfasen alt efter om det er windows eller mac. Under udvikling, kom kortet ikke frem på safari
   new User("login", "username");
   introTxtScreen("loggedOut");
 });
