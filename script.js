@@ -26,7 +26,7 @@ function initMap() {
 
   map = new google.maps.Map(document.getElementById("map"), {
     center: { lat: 55.8825, lng: 8.237 },
-    zoom: 10,
+    zoom: 7,
     mapTypeId: "hybrid",
   });
 
@@ -154,7 +154,7 @@ function introTxtScreen(state) {
   if (state === "loggedIn") {
     headingOne.textContent = "Udforsk";
     introTxt.innerHTML =
-      "Udforsk kortet for at lokalisere yderligere opgaver i dit område.<br>Hvis der ikke fremgår aktive opgaver, returnér da til base.";
+      "Udforsk kortet for at lokalisere opgaver i dit område.<br> Du kan zoome ind og ud på kortet, for at finde opgaver som er vist med markører på kortet. Klik på kanten af zonen for at aktivere opgaven. <br>Hvis der ikke fremgår aktive opgaver, returnér da til base.";
   }
 
   //evt taskActive
